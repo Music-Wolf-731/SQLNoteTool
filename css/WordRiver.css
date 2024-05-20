@@ -1,0 +1,142 @@
+:root{
+    --EditBox_N:0px;
+    --EditBox_S:100px;
+    --EditBox_M:250px;
+    --EditBox_L:600px;
+    --TopBarHeight:2.3em;
+}
+body{margin:0;background:black;color:white;font-size: 13px;}
+
+h3 {font-size:1.5em}
+
+#TopBar {
+    width: 100%;
+    background: rgb(42, 6, 75);
+    position: fixed;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#TopBarMainMenu{
+    display:flex;
+}
+
+#TopBar>div:first-child{
+    width:100%;
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+#TopBar a {
+    margin:.3em 1em;
+    color:white;
+}
+
+#TopBarSpace{width:100%;height:var(--TopBarHeight)}
+
+#GroupABox {
+    background: rgb(83, 14, 108);
+}
+
+.River_Title {
+    width:100%;
+}
+
+#WordRiver {
+    display: flex;
+    flex-wrap: wrap;
+    height: calc(100vh - var(--TopBarHeight) - var(--EditBoxHeight));
+    transition: height 0.5s ease;
+    overflow: scroll;
+    scrollbar-width: none;
+    align-content: flex-start;
+}
+.WordPane {
+    padding : .2em .6em;
+    margin: .2em .4em;
+    border: 2px solid #ffffff;
+    border-radius: 10px;
+}
+.WordPane h3 , .WordPane p{
+    margin: 0;
+}
+.WordPane .Content{
+    display: none;
+}
+
+
+#EditUse {
+    display: flex;
+    transition: height 0.5s ease;
+    height:var(--EditBoxHeight);
+    max-height: calc(100vh - 50px);
+}
+#EditUse>div:first-child{
+    height:100%;
+    width:calc(100% - 4em);
+    overflow: scroll;
+    scrollbar-width: none;
+}
+#EditUse>div:last-child{
+    height:100%;
+    width:4em;
+    overflow: scroll;
+    scrollbar-width: none;
+}
+
+#SizeBox{
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+#SizeBox > div {
+    background: rgb(108, 34, 137);
+    width:30px;height:30px;
+    margin:0 5px;
+    border-radius: 15px;
+}
+
+#FormBox {
+    width:100%;
+    position: fixed;bottom:0;
+}
+
+#EditWordContent{
+    width:100%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center;
+}
+form p{margin:0;}
+form #Input_word{
+    width:15em;
+}
+form #Input_wordname{
+    width:15em;
+}
+form #Input_wordcontent{
+    width:100%;
+}
+
+label {margin: 0 .6em;}
+
+.CheckBigbox {display: flex;}
+.CheckBigbox input{display: none;}
+
+
+.CheckBigbox label{
+    transition: all 0.3s ease;
+    background: rgb(71, 71, 74);
+    border-radius: 5px;
+}
+.CheckBigbox label {
+    margin: 5px 8px;
+    padding: 6px 10px;
+}
+input:checked + label{
+    background: rgb(205, 78, 244);
+}
+
