@@ -1,6 +1,6 @@
 
 <?php
-session_start();
+// session_start();
 unset($_SESSION['customer']);
 $pdo=new PDO('mysql:host=localhost;dbname=notetool;charset=utf8','NoteToolController', 'ToolMaker');
 
