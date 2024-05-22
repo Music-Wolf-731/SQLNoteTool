@@ -7,10 +7,8 @@ if(!isset($_SESSION['UserData'])){
 }
 
 $pdo=new PDO('mysql:host=localhost;dbname=notetool;charset=utf8','NoteToolController', 'ToolMaker');
-
-
-
 if ($_SERVER["REQUEST_METHOD"] == "POST"){
+    print_r($_POST);
     
     try {
         $pdo->beginTransaction();
@@ -34,11 +32,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
             // exit();
             
         } else {
-
+            if($_POST['word']==''){header("Location: ".$_SERVER['HTTP_REFERER']);exit();}
             //編輯或是新增字詞
-
+            
 
             if(isset($_POST['edit'])){
+                
                 $ForSql = '
                     UPDATE word 
                     SET
@@ -48,6 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
                     WHERE user_id = :user_id AND word_id = :wordId;
                     ';
             }else{
+                
                 $ForSql = '
                     INSERT INTO word(user_id,word,word_name,word_content)
                     VALUES (:user_id, :word, :word_name, :word_content);
@@ -84,10 +84,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
                 }
                 
                 $stmt->execute();
-
-                // 第二步：执行带有 CTE 的 DELETE 语句
-                
-                if(isset($_POST['edit'])){
+                //帶有CTE的查詢                
+                if(isset($_POST['OnEditGroup'])){
                     $DeleteGroupSql = '
                         DELETE FROM word_group_bridge
                         WHERE (word_id, group_id) IN (
@@ -104,32 +102,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
                     $stmt->bindParam(':Page', $SQL_Page);
                     $stmt->bindParam(':wordId', $SQL_word_id);
                     $stmt->execute();
-                }
                 
-                
-                if($_POST['group']){
-                    $ForAddGroupSQL = 'INSERT INTO word_group_bridge(word_id,group_id)
-                    VALUES ';
-                    foreach ($_POST['group'] as $key => $value) { 
-                        //對新增和編輯的編碼做出差異
-                        $var = (isset($_POST['edit']))? $SQL_word_id : '@last_id_in_A_table';
-                        //置入所有群組錨點
-                        $ForAddGroupSQL .= ' ('.$var.','.$value.'),';
+                    if($_POST['group']){
+                        $ForAddGroupSQL = 'INSERT INTO word_group_bridge(word_id,group_id)
+                        VALUES ';
+                        foreach ($_POST['group'] as $key => $value) { 
+                            //對新增和編輯的編碼做出差異
+                            $var = (isset($_POST['edit']))? $SQL_word_id : '@last_id_in_A_table';
+                            //置入所有群組錨點
+                            $ForAddGroupSQL .= ' ('.$var.','.$value.'),';
+                        }
+                        $ForAddGroupSQL = rtrim($ForAddGroupSQL,',') . ';';
+
+                        
+                        $stmt = $pdo->prepare($ForAddGroupSQL);
+                        $stmt->execute();
                     }
-                    $ForAddGroupSQL = rtrim($ForAddGroupSQL,',') . ';';
-
-                    // echo '<br><br>'.$ForAddGroupSQL.'<br><br>';
-                    $stmt = $pdo->prepare($ForAddGroupSQL);
-                    $stmt->execute();
                 }
-
                 
         }
-
-
-
-
-
             $stmt->closeCursor();
             $pdo->commit();
             
@@ -143,24 +134,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
     header("Location: ".$_SERVER['HTTP_REFERER']);
     exit();
 }
-
-
-
-
-
-
-
 $ForSQL = 'SELECT * FROM word LEFT JOIN word_page_bridge ON  word.word_id = word_page_bridge.word_id ';
 $ForSQL .= 'WHERE Type_page_id = ? AND user_id = ?';
 
 $sql=$pdo->prepare($ForSQL);
 $sql->execute([$_GET['PageId'] , $_SESSION['UserData']['Id']]);
-$WordArr = [];$var=[];
+
+//渲染文字陣列及基本資料置入
+$WordArr = [];$OnlyWordId=[];
 foreach ($sql->fetchAll() as $row) {
-    $var[]=$row['word_id'];
+    $OnlyWordId[]=$row['word_id'];
     $WordArr[$row['word_id']]['word'] = $row['word'];
     $WordArr[$row['word_id']]['word_name'] = $row['word_name'];
     $WordArr[$row['word_id']]['word_content'] = $row['word_content'];
+
+    
+    // 將內容進行 HTML 轉譯
+    $WordArr[$row['word_id']]['word_content_HTML'] = nl2br(htmlspecialchars($row['word_content'], ENT_QUOTES, 'UTF-8'));
 }
 
 //渲染群組資料
@@ -177,17 +167,39 @@ $GroupList['N'] = '未分組';
 
 //渲染本頁群組和字詞的關聯性資料
 $PrintGroupSQL = '';
-foreach ($var as $key => $value) {$PrintGroupSQL.=$value.',';}
+foreach ($OnlyWordId as $key => $value) {$PrintGroupSQL.=$value.',';}
+$var='SELECT group_id FROM `word_group` WHERE Type_page_id = '.$_GET['PageId'].' AND user_id = '.$_SESSION['UserData']['Id'];
+
 $PrintGroupSQL = '
     SELECT * 
     FROM word_group_bridge
-    WHERE word_id IN('.rtrim($PrintGroupSQL,',').')
+    WHERE word_id IN('.rtrim($PrintGroupSQL,',').') AND group_id IN ('.$var.')
 ';
-$sql=$pdo->prepare($PrintGroupSQL);$sql->execute();
-
+if(count($OnlyWordId)!==0){$sql=$pdo->prepare($PrintGroupSQL);$sql->execute();}
 foreach ($sql->fetchAll() as $row) {
     $WordArr[$row['word_id']]['word_group'][] = 'group_'.$row['group_id'];
 }
+
+
+//渲染全頁數資料
+$PrintPage_SQL = 'SELECT Type_page_id,page_name FROM `type_page` WHERE user_id = '.$_SESSION['UserData']['Id'] . ' AND Type_page_id !='.$_GET['PageId'];
+$sql=$pdo->prepare($PrintPage_SQL);$sql->execute();
+foreach ($sql->fetchAll() as $row) {
+    $OnlyPage[$row['Type_page_id']] = $row['page_name'];
+}
+
+
+//取得各字詞是否存在於其它頁的資料
+$SeachOtherPage = '';
+foreach ($WordArr as $key => $value) {
+    $SeachOtherPage .= $key . ',';
+}
+$SeachOtherPage = 'SELECT * FROM word_page_bridge WHERE word_id IN ('.rtrim($SeachOtherPage,',').') AND Type_page_id != '.$_GET['PageId'];
+if(count($OnlyWordId)!==0){$sql=$pdo->prepare($SeachOtherPage);$sql->execute();}
+foreach ($sql->fetchAll() as $row) {
+    $WordArr[$row['word_id']]['InOtherPage'][] = 'page_'.$row['Type_page_id'];
+}
+
 
 
 function WriteGroupEdit($Arr){
@@ -203,7 +215,7 @@ function WriteGroupABox($GroupList){
     }
 }
 
-//產生字詞合道內容
+//產生字詞河道內容
 
 function RiverWrite($GroupList,$WordArr){
 
@@ -216,15 +228,15 @@ function RiverWrite($GroupList,$WordArr){
     }
     
     foreach ($GroupList as $Group_ID => $Group_Name) {
-        echo '<div class="River_Title" id="GP_'.$Group_ID.'">'.$Group_Name.'</div>';
+        echo '<div class="River_Title" id="GP_'.$Group_ID.'"><p>'.$Group_Name.'</p><div></div></div>';
         foreach ($WordArr as $Word_Id => $value) {
             if($Group_ID!=='N'){
                 if (!isset($value['word_group'])){continue;}
                 if (!in_array('group_'.$Group_ID, $value['word_group'])){continue;}
-                write_Word_Pane($Word_Id,$value);echo '<br><br>';
+                write_Word_Pane($Word_Id,$value);
             }else{
                 if (isset($value['word_group'])){continue;}
-                write_Word_Pane($Word_Id,$value);echo '<br><br>';
+                write_Word_Pane($Word_Id,$value);
             }
         
         }
@@ -232,9 +244,15 @@ function RiverWrite($GroupList,$WordArr){
     // print_r($GroupList);
 }
 
+function PrintPageEdit($OnlyPage){
+    foreach ($OnlyPage as $key => $value) {
+        echo '<input type="checkbox" id="page_'.$key.'" name="page[]" value="'.$key.'"><label for="page_'.$key.'">'.$value.'</label>';
+    }
+    
+}
+
 //將資料陣列轉為js陣列qq
 $json_array = json_encode($WordArr);
-
 
 
 
@@ -279,41 +297,57 @@ $json_array = json_encode($WordArr);
     <div id="TopBarSpace"></div>
     <div id="WordRiver">
     <?php RiverWrite($GroupList,$WordArr);?>
+    <div style="width:100%;height:3em;"></div>
     </div>
     <div id="FormBox">
-        <div id="SizeBox">
-            <div onclick="ZoomEditBox('N')">N</div>
-            <div onclick="ZoomEditBox('S')">S</div>
-            <div onclick="ZoomEditBox('M')">M</div>
-            <div onclick="ZoomEditBox('L')">L</div>
+        <div id="Switch">
+            <div id="PageBox">
+                <div onclick="" class="active"><p>展示</p></div>
+                <div onclick=""><p>編輯文字</p></div>
+                <div onclick=""><p>群組</p></div>
+                <div onclick=""><p>跨頁</p></div>
+            </div>
+            <div id="SizeBox">
+                <div onclick="ZoomEditBox('N',this)"><p>隱藏</p></div>
+                <div onclick="ZoomEditBox('S',this)" class="active"><p>小</p></div>
+                <div onclick="ZoomEditBox('M',this)"><p>中</p></div>
+                <div onclick="ZoomEditBox('L',this)"><p>大</p></div>
+            </div>
         </div>
         <form id="EditUse" action="" method="post">
-            <div>
-                <div id="EditWordContent">
+            <div id="PageList">
+                <div id="ViewContent"><div></div></div>
+                <div id="EditWordContent" class="hidden">
                     <div style="display:none;">
                         <input id="Input_Word_Id" type="text" name="wordId">
                         <input id="OnEditGroup" type="checkbox" name="OnEditGroup" value="true">
                     </div>
-                    <div>
-                        <label for="Input_word">詞句：</label>
-                        <input id="Input_word" type="text" name="word">
-                    </div>
-                    <div>
-                        <label for="Input_wordname">簡述：</label>
-                        <input id="Input_wordname" type="text" name="wordname">
-                    </div>
-                    <div class="CheckBigbox">
-                            <input name="edit" class="EditOrDelete" onclick="EditOrDelete(this)" id="Input_wordNotForNew" type="checkbox">
-                            <label for="Input_wordNotForNew">編輯</label>
+                    <div class="inputflex">
+                        <div>
+                            <label for="Input_word">詞句：</label>
+                            <input id="Input_word" type="text" name="word">
+                        </div>
+                        <div>
+                            <label for="Input_wordname">簡述：</label>
+                            <input id="Input_wordname" type="text" name="wordname">
+                        </div>
+                        <div class="CheckBigbox">
+                                <input name="edit" class="EditOrDelete" onclick="EditOrDelete(this)" id="Input_wordNotForNew" type="checkbox">
+                                <label for="Input_wordNotForNew">編輯</label>
 
-                            <input name="delete" class="EditOrDelete" onclick="EditOrDelete(this)" id="Input_wordDelete" type="checkbox">
-                            <label for="Input_wordDelete">刪除</label>
+                                <input name="delete" class="EditOrDelete" onclick="EditOrDelete(this)" id="Input_wordDelete" type="checkbox">
+                                <label for="Input_wordDelete">刪除</label>
+
+                                <div onclick="PrintInTextarea('copy')">加入複製框</div>
+                        </div>
                     </div>
                     <textarea id="Input_wordcontent" name="wordcontent"></textarea>
                 </div>
-                <div id="GroupEditBox"><?php WriteGroupEdit($GroupList)?></div>
+                <div id="GroupEditBox" class="hidden"><?php WriteGroupEdit($GroupList)?></div>
+                <div id="ThrowOtherPage" class="hidden"><?php PrintPageEdit($OnlyPage) ?></div>
             </div>
             <div>
+                <input type="reset">
                 <input type="submit">
             </div>
         </form>
@@ -321,19 +355,64 @@ $json_array = json_encode($WordArr);
 </body>
 
 <script>
+    //選擇字詞框
+    document.querySelectorAll('#WordRiver > .WordPane').forEach(event => {
+        event.addEventListener('click', () => {
+            let Var = document.querySelector('#WordRiver > .active')
+            if(Var){Var.classList.remove('active')}
+            // console.log(document.querySelector('#WordRiver > .active'))
+            event.classList.add('active')
+        })
+    })
     //前往指定群組
     function ScrollToGroup(event, sectionId) {
         event.preventDefault(); // 防止默認行為
-        const section = document.getElementById(sectionId);
-        const ScrollTo = section.getBoundingClientRect().top + window.pageYOffset - 80;
+        let RiverBox = document.querySelector('#WordRiver > div').getBoundingClientRect().top;
+        let Group = document.getElementById(sectionId).getBoundingClientRect().top;
+        console.log(RiverBox+ '奇' +Group)
+        const ScrollTo = Group - RiverBox - 30;
         document.getElementById('WordRiver').scrollTo({ 
             top: ScrollTo,
             behavior: 'smooth' 
         });
     }
+    //切換頁面
+    document.addEventListener('DOMContentLoaded', () => {
+        const rowBookmarkDivs = document.querySelectorAll('#PageBox > div');
+        const bookmarkDivs = document.querySelectorAll('#PageList > div');
+
+        rowBookmarkDivs.forEach((div, index) => {
+            div.addEventListener('click', () => {
+
+                bookmarkDivs.forEach(value => {
+                    if (!value.classList.contains('hidden')){
+                        value.classList.add('hidden')
+                    }
+
+                    rowBookmarkDivs.forEach(Event => {
+                        if (Event.classList.contains('active')){
+                            Event.classList.remove('active')
+                        }
+                        div.classList.add('active')
+                    })
+                })
+                bookmarkDivs[index].classList.remove('hidden')
+                updateWordContentEdit()
+            });
+        });
+    });
 
     //縮放編輯框
-    function ZoomEditBox(Size){
+    function ZoomEditBox(Size,ThisCheck){
+        document.getElementById('SizeBox').querySelectorAll('div').forEach( value => {
+            //確認對應項目的class列表是否有active，有則刪除
+            if (value.classList.contains('active')){
+                value.classList.remove('active')
+            }
+        })
+        //在受點擊項目class中加入active
+        ThisCheck.classList.add('active')
+        //修改root:中的--EditBoxHeight
         document.documentElement.style.setProperty('--EditBoxHeight', 'var(--EditBox_'+Size+')');
     }
 
@@ -356,6 +435,7 @@ $json_array = json_encode($WordArr);
     })
 
     //抓取資料
+    var CopyArr=[];
     function GetPane(Pos){
 
         document.getElementById('EditUse').reset();
@@ -368,6 +448,32 @@ $json_array = json_encode($WordArr);
         document.getElementById('Input_wordname').value = WordArr['word_name'];
         document.getElementById('Input_wordcontent').value = WordArr['word_content'];
 
+
+        //置入瀏覽頁       
+        let PrintContentArr = WordArr['word_content_HTML'].split("|:|"); let PrintContent = '';
+        CopyArr = WordArr['word_content'].split("|:|"); let PrintContent_copy = '';
+        PrintContentArr.forEach((value,key) => {
+            switch (value) {
+                case 'Copy_S':
+                key++;
+                PrintContent += '<span class="ClickCopy" onclick="CopyText('+key+')" forcopy="'+key+'">';
+                    break;
+                case 'Copy_E':
+                PrintContent += '</span>';
+                    break;
+            
+                default:
+                let regex = /^(<br \/>\s*)+|(\s*<br \/>)+$|^\s+|\s+$/g;
+                let Print = value.replace(regex, '');
+                PrintContent += Print.trim();
+                    break;
+            }
+        })
+            console.log(CopyArr)
+            console.log(PrintContentArr)
+        document.querySelector('#ViewContent div').innerHTML = '<p>'+PrintContent+'</p>';
+
+        
         document.getElementById('Input_wordNotForNew').checked = true;
 
         let GroupItem = document.getElementById('GroupEditBox').querySelectorAll('input');
@@ -375,13 +481,55 @@ $json_array = json_encode($WordArr);
         GroupItem.forEach(value => {
             value.checked = false;
         })
-
-        console.log(WordArr['word_group'])
-        WordArr['word_group'].forEach(value => {
-            console.log(value)
-            document.getElementById(value).checked = true;
-        });
-
+        if(typeof WordArr['word_group'] !== 'undefined'){
+            WordArr['word_group'].forEach(value => {
+                console.log(value)
+                document.getElementById(value).checked = true;
+            });
+        }
+        if(typeof WordArr['InOtherPage'] !== 'undefined'){
+            WordArr['InOtherPage'].forEach(value => {
+                console.log(value)
+                document.getElementById(value).checked = true;
+            });
+        }
     }
+    //文字框內加入特殊文字
+    function PrintInTextarea(type){
+        let Print ;
+        switch (type) {
+            case 'copy':
+            Print  = '\n|:|Copy_S|:|\n在這裡寫入點擊複製框的內文\n|:|Copy_E|:|';
+                break;
+        
+            default:
+                break;
+        }
+        document.getElementById('Input_wordcontent').value += Print;
+    }
+
+    //抓取複製
+    function CopyText(value){
+        navigator.clipboard.writeText(CopyArr[value].trim())
+    }
+
+    //抓取內容框大小並調整渲染內容
+    function updateWordContentEdit() {
+        // 获取两个元素
+        const editWordContent = document.getElementById('EditWordContent');
+        const inputWordContent = document.getElementById('Input_wordcontent');
+
+        // 计算两个元素的顶部之间的距离
+        const editWordContentTop = editWordContent.getBoundingClientRect().top;
+        const inputWordContentTop = inputWordContent.getBoundingClientRect().top;
+        const distance = inputWordContentTop - editWordContentTop;
+
+        // 将距离设置为 CSS 变量
+        document.documentElement.style.setProperty('--WordcontentEdit', `${distance}px`);
+    }
+
+    // 在页面加载时和窗口尺寸改变时调用 updateWordContentEdit 函数
+    window.addEventListener('load', updateWordContentEdit);
+    window.addEventListener('resize', updateWordContentEdit);
 </script>
 </html>

@@ -1,17 +1,24 @@
 :root{
     --EditBox_N:0px;
-    --EditBox_S:100px;
-    --EditBox_M:250px;
-    --EditBox_L:600px;
+    --EditBox_S:calc(10vh + 50px);
+    --EditBox_M:50vh;
+    --EditBox_L:calc(95vh - 50px);
     --TopBarHeight:2.3em;
+    --BackGround:rgb(15, 10, 19);
+    --SecColor:rgb(41, 23, 58);
+    --ThirdColor:rgb(100, 38, 159);
+    --RiverTitleColor:rgb(194, 161, 226);
+
+    --PainDeCho:rgb(147, 60, 173);
+    --PainCho:rgb(0 110 175);
 }
-body{margin:0;background:black;color:white;font-size: 13px;}
+body{margin:0;background:var(--BackGround);color:white;font-size: 13px;}
 
 h3 {font-size:1.5em}
 
 #TopBar {
     width: 100%;
-    background: rgb(42, 6, 75);
+    background: var(--SecColor);
     position: fixed;
     display:flex;
     flex-direction: column;
@@ -37,11 +44,24 @@ h3 {font-size:1.5em}
 #TopBarSpace{width:100%;height:var(--TopBarHeight)}
 
 #GroupABox {
-    background: rgb(83, 14, 108);
+    background: var(--ThirdColor);
 }
 
 .River_Title {
-    width:100%;
+    font-size: 1.4em;
+    margin: .5em 0 .2em;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+}
+
+.River_Title p {margin:0;color: var(--RiverTitleColor);}
+
+.River_Title > div{background: var(--RiverTitleColor);width:calc(100% - 2em);height:2px;}
+
+#WordRiver > .active {
+    background: var(--PainCho);
 }
 
 #WordRiver {
@@ -52,32 +72,66 @@ h3 {font-size:1.5em}
     overflow: scroll;
     scrollbar-width: none;
     align-content: flex-start;
+    user-select: none;
+    
 }
 .WordPane {
+    transition: background 0.5s ease;
     padding : .2em .6em;
     margin: .2em .4em;
-    border: 2px solid #ffffff;
     border-radius: 10px;
+    background: var(--SecColor);
 }
+
+.WordPane:hover{background: var(--ThirdColor);}
+
 .WordPane h3 , .WordPane p{
     margin: 0;
 }
 .WordPane .Content{
     display: none;
 }
+#ViewContent {
+    height: 100%;
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
 
+#ViewContent div{
+    font-size: 1.2em;
+}
+
+.ClickCopy{
+    display: block;
+    width: calc(100% - 2.6em);
+    margin: .5em 1.3em;
+    background: black;
+}
+
+.ClickCopy::after{
+    border-top: 1px solid #ffffff;
+    text-align: right;
+    display: block;
+    font-size: .8em;
+    content: "點擊本視窗即可複製內部文字.."; /*加入這些內容在整個<div>的前面*/
+    color: rgba(255, 255, 255, 0.352); /*字體為藍色*/
+  }
 
 #EditUse {
     display: flex;
     transition: height 0.5s ease;
     height:var(--EditBoxHeight);
     max-height: calc(100vh - 50px);
+    background: var(--SecColor);
 }
 #EditUse>div:first-child{
     height:100%;
     width:calc(100% - 4em);
     overflow: scroll;
     scrollbar-width: none;
+}
+#EditUse>div:first-child>div{
+    margin: .2em .5em;user-select: none;
 }
 #EditUse>div:last-child{
     height:100%;
@@ -86,17 +140,34 @@ h3 {font-size:1.5em}
     scrollbar-width: none;
 }
 
-#SizeBox{
+#Switch {
     display: flex;
-    flex-direction: row-reverse;
+    flex-direction: row;
+    justify-content: space-between;
+    user-select: none;
 }
 
-#SizeBox > div {
-    background: rgb(108, 34, 137);
-    width:30px;height:30px;
-    margin:0 5px;
-    border-radius: 15px;
+#Switch > div{
+    display: flex;
+    flex-direction: row;
 }
+
+#Switch > div > .active{
+    background:  var(--PainCho);
+}
+
+#Switch > div > div {
+    transition: all 0.3s ease;
+    background: var(--ThirdColor);
+    min-width:30px;height:1.7em;
+    margin:0 .1em;
+    border-radius: 15px 15px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#Switch p {margin:.5em .7em .3em;font-size: 1.3em;}
 
 #FormBox {
     width:100%;
@@ -104,39 +175,53 @@ h3 {font-size:1.5em}
 }
 
 #EditWordContent{
-    width:100%;
+    height:100%;
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
     align-items: center;
 }
+
+#EditWordContent>.inputflex{display: flex;flex-wrap: wrap;}
+
+#GroupEditBox > input , #ThrowOtherPage > input{display: none;}
+
+#GroupEditBox > label , #ThrowOtherPage > label{
+    transition: background 0.5s ease;
+    background: var(--ThirdColor);
+    padding: 5px;
+    border-radius: 3px;
+}
+
 form p{margin:0;}
 form #Input_word{
-    width:15em;
+    width:10em;
 }
 form #Input_wordname{
-    width:15em;
+    width:10em;
 }
 form #Input_wordcontent{
-    width:100%;
+    height:calc(100% - var(--WordcontentEdit) - .3em);
+    width:calc(100% - 2em);
 }
 
-label {margin: 0 .6em;}
+#PageList > .hidden{
+    display:none;
+}
 
-.CheckBigbox {display: flex;}
+.CheckBigbox {display: flex;align-items: center;}
 .CheckBigbox input{display: none;}
 
 
-.CheckBigbox label{
+.CheckBigbox label ,.CheckBigbox>div{
+    height: 2.3em;
     transition: all 0.3s ease;
     background: rgb(71, 71, 74);
     border-radius: 5px;
-}
-.CheckBigbox label {
-    margin: 5px 8px;
+    margin: 0 0 0 1em ;
     padding: 6px 10px;
 }
 input:checked + label{
-    background: rgb(205, 78, 244);
+    background: var(--PainCho) !important;
 }
 
