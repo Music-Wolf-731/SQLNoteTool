@@ -1,10 +1,6 @@
 <?php 
 session_start();
-
-if(!isset($_SESSION['UserData'])){
-    echo '請先進行登錄';
-    exit(); 
-}
+require 'display.php';OnCheckSignIn();
 
 $pdo=new PDO('mysql:host=localhost;dbname=notetool;charset=utf8','NoteToolController', 'ToolMaker');
 if ($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -182,12 +178,13 @@ foreach ($sql->fetchAll() as $row) {
 
 
 //渲染全頁數資料
-$PrintPage_SQL = 'SELECT Type_page_id,page_name FROM `type_page` WHERE user_id = '.$_SESSION['UserData']['Id'] . ' AND Type_page_id !='.$_GET['PageId'];
+$PrintPage_SQL = 'SELECT Type_page_id,page_name FROM `type_page` WHERE user_id = '.$_SESSION['UserData']['Id'] ;
 $sql=$pdo->prepare($PrintPage_SQL);$sql->execute();
 foreach ($sql->fetchAll() as $row) {
+    if($row['Type_page_id']==$_GET['PageId']){$PageName = $row['page_name'] . ' | 哈勒筆記';continue;}
     $OnlyPage[$row['Type_page_id']] = $row['page_name'];
 }
-
+if(!isset($OnlyPage)){$OnlyPage=[];}
 
 //取得各字詞是否存在於其它頁的資料
 $SeachOtherPage = '';
@@ -205,14 +202,19 @@ foreach ($sql->fetchAll() as $row) {
 function WriteGroupEdit($Arr){
     foreach ($Arr as $key => $value) {
         if($key=='N'){continue;}
-        echo '<input type="checkbox" id="group_'.$key.'" name="group[]" value="'.$key.'"><label for="group_'.$key.'">'.$value.'</label>';
+        $var='<input type="checkbox" id="group_'.$key.'" name="group[]" value="'.$key.'"><label for="group_'.$key.'">'.$value.'</label>';
+        $ForReturn=(isset($ForReturn))? $ForReturn.$var:$var;
     }
+    $ForReturn=(!isset($ForReturn))?'<h3>尚未建立群組，可點擊上方的編輯群組進行調整</h3>':$ForReturn;
+    echo $ForReturn;
 }
 
 function WriteGroupABox($GroupList){
+    $ForReturn = '';
     foreach ($GroupList as $key => $value) {
-        echo '<a href="#!" onclick="ScrollToGroup(event, \'GP_'.$key.'\') ">'.$value.'</a>';
+        $ForReturn .= '<a href="#!" onclick="ScrollToGroup(event, \'GP_'.$key.'\') "><p>'.$value.'</p></a>';
     }
+    return $ForReturn;
 }
 
 //產生字詞河道內容
@@ -246,14 +248,15 @@ function RiverWrite($GroupList,$WordArr){
 
 function PrintPageEdit($OnlyPage){
     foreach ($OnlyPage as $key => $value) {
-        echo '<input type="checkbox" id="page_'.$key.'" name="page[]" value="'.$key.'"><label for="page_'.$key.'">'.$value.'</label>';
+        $var='<input type="checkbox" id="page_'.$key.'" name="page[]" value="'.$key.'"><label for="page_'.$key.'">'.$value.'</label>';
+        $ForReturn =(isset($ForReturn))? $ForReturn.$var:$var;
     }
-    
+    $ForReturn = (!isset($ForReturn))?'<h3>當您建立其它可關聯字詞頁時即會顯示於此</h3>':$ForReturn;  
+    echo $ForReturn;
 }
 
 //將資料陣列轉為js陣列qq
 $json_array = json_encode($WordArr);
-
 
 
 
@@ -263,11 +266,7 @@ $json_array = json_encode($WordArr);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="bootstrap/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="../bootstrap/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <?php PrintHead($PageName)?>
     <link rel="stylesheet" href="../css/WordRiver.css">
     <script>
     // 在 JavaScript 中使用 JSON 字串
@@ -280,22 +279,12 @@ $json_array = json_encode($WordArr);
 </head>
 <body>
     <div style="width:100%">
-    <div id="TopBar">
-        <div>
-            <div id='TopBarMainMenu'>
-                <a href="../Edit_Group.php<?php echo "/?PageId=".$_GET['PageId']?>"><div>編輯群組</div></a>
-                <a class="" data-bs-toggle="collapse" href="#GroupABox" role="button" aria-expanded="false" aria-controls="GroupABox">
-                    跳轉群組
-                </a>
-            </div>
-            <a href="../choose_Page.php"><div>回選頁</div></a>
-        </div>
-        <div class="collapse" id="GroupABox">
-            <?php WriteGroupABox($GroupList); ?>
-        </div>
-    </div>
-    <div id="TopBarSpace"></div>
+        <?php PrintTopBar('WordRiver',$GroupList)?>
     <div id="WordRiver">
+
+
+
+
     <?php RiverWrite($GroupList,$WordArr);?>
     <div style="width:100%;height:3em;"></div>
     </div>
@@ -341,10 +330,10 @@ $json_array = json_encode($WordArr);
                                 <div onclick="PrintInTextarea('copy')">加入複製框</div>
                         </div>
                     </div>
-                    <textarea id="Input_wordcontent" name="wordcontent"></textarea>
+                    <textarea id="Input_wordcontent" name="wordcontent" placeholder="字詞描述或內容，填入送出後在點擊詞卡時將會顯示在'展示'的頁籤中"></textarea>
                 </div>
-                <div id="GroupEditBox" class="hidden"><?php WriteGroupEdit($GroupList)?></div>
-                <div id="ThrowOtherPage" class="hidden"><?php PrintPageEdit($OnlyPage) ?></div>
+                <div id="GroupEditBox" class="FlexBox hidden"><?php WriteGroupEdit($GroupList)?></div>
+                <div id="ThrowOtherPage" class="FlexBox hidden"><?php PrintPageEdit($OnlyPage) ?></div>
             </div>
             <div>
                 <input type="reset">

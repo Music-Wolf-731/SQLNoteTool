@@ -1,51 +1,8 @@
-:root{
-    --EditBox_N:0px;
-    --EditBox_S:calc(10vh + 50px);
-    --EditBox_M:50vh;
-    --EditBox_L:calc(95vh - 50px);
-    --TopBarHeight:2.3em;
-    --BackGround:rgb(15, 10, 19);
-    --SecColor:rgb(41, 23, 58);
-    --ThirdColor:rgb(100, 38, 159);
-    --RiverTitleColor:rgb(194, 161, 226);
 
-    --PainDeCho:rgb(147, 60, 173);
-    --PainCho:rgb(0 110 175);
-}
-body{margin:0;background:var(--BackGround);color:white;font-size: 13px;}
 
 h3 {font-size:1.5em}
 
-#TopBar {
-    width: 100%;
-    background: var(--SecColor);
-    position: fixed;
-    display:flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-#TopBarMainMenu{
-    display:flex;
-}
-
-#TopBar>div:first-child{
-    width:100%;
-    display:flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
-
-#TopBar a {
-    margin:.3em 1em;
-    color:white;
-}
-
-#TopBarSpace{width:100%;height:var(--TopBarHeight)}
-
-#GroupABox {
-    background: var(--ThirdColor);
-}
+.FlexBox > label {margin: .6em .4em}
 
 .River_Title {
     font-size: 1.4em;
@@ -205,9 +162,9 @@ form #Input_wordcontent{
     width:calc(100% - 2em);
 }
 
-#PageList > .hidden{
-    display:none;
-}
+#PageList > .hidden{display:none;}
+#PageList h3 {opacity: .3;margin:2em;text-align: center;}
+#PageList > {display:none;}
 
 .CheckBigbox {display: flex;align-items: center;}
 .CheckBigbox input{display: none;}

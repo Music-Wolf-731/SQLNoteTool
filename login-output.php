@@ -18,11 +18,9 @@ if (isset($_SESSION['account'])) {
 		$_SESSION['UserData']['Id'] = $row['user_id'];
 		$_SESSION['UserData']['name'] = $row['user_name'];
 		$_SESSION['UserData']['avatar'] = $row['avatar_img'];
-		print_r($row);
 	}
-	echo $_SESSION['UserData']['name'] . '登錄成功' ;
-	echo '<a href="_index.php"><button>RR</button></a>';
+	echo $_SESSION['UserData']['name'] . '登錄成功<br><a href="choose_Page.php">前往筆記選頁</a>' ;
 } else {
-	echo '登入ID或密碼有誤。';
+	echo '登入ID或密碼有誤。<br><a href="login-input.php">返回登入頁</a>';
 } 
 ?>

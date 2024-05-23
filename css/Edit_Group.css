@@ -1,19 +1,22 @@
-body{
-    margin:0;
+
+form{
+    display:flex;flex-wrap: wrap;
 }
-#row_bookmark{
-    display: flex;
-    justify-content: space-between;
-}
+
+input{margin: 0 1.2em 0 .5em;}
+
+h5{margin:.3em 1em;color: rgba(255, 255, 255, 0.495);}
+
+#row_bookmark{display: flex;}
 #row_bookmark > div{
-    width:calc(25% - 2px);
+    margin: 0 .2em;
+    padding: .2em 2em;
     border-radius: 10px 10px 0 0;
-    background:gray;
+    background:var(--ThirdColor);
 
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-size: 30px;
 }
 #row_bookmark  p{
     margin: .2em 0 ;
@@ -21,18 +24,11 @@ body{
 #bookmark>div{
     display:none;
     font-size: calc(20px + .3vw);
-}
-#bookmark input,#bookmark select{
-    font-size: 1em;
-    width:100%;
-    margin:.3em 0;
+    background: var(--SecColor);
+    padding:1em;
 }
 #bookmark .active{
     display:block;
-}
-
-#bookmark .output{
-    width:100%;
 }
 
 #sortable{
@@ -40,17 +36,22 @@ body{
     flex-wrap: wrap;
     flex-direction: row;
     align-items: center;
+    width:100%
 }
 
 #sortable > div {
     padding: .25em .5em;
     margin:.35em;
+    border: 0;
+    color: white;
     user-select: none;
+    background: var(--ThirdColor);
+    border-radius: 5px;
 }   
 
-@media screen and (min-width: 1000px) {
+/* @media screen and (min-width: 1000px) {
     body{
         width:calc(5% + 950px);
         margin:auto
     }
-}
+} */

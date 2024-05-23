@@ -1,5 +1,6 @@
 <?php 
 session_start();
+require 'display.php';OnCheckSignIn();
 $_SESSION['UserData']['Id'];
 
 $pdo=new PDO('mysql:host=localhost;dbname=notetool;charset=utf8','NoteToolController', 'ToolMaker');
@@ -98,6 +99,8 @@ function WriteGroupList($pdo,$Type){
         </div>
         ';
       }
+      $ForReturn =($ForReturn == '')? '<div class="hint" style="width:100%;text-align: center;">尚無可進行排序之群組，需先進行新增</div>':'<div id="sortable">'.$ForReturn.'</div>';
+      
       break;
     
     case 'option':
@@ -106,6 +109,7 @@ function WriteGroupList($pdo,$Type){
         <option value="'.$row['group_id'].'">'.$row['group_name'].'</option>
         ';
       }
+      $ForReturn = ($ForReturn=='')?'<option disabled">需先新增群組</option>':$ForReturn;
     default:
       # code...
       break;
@@ -119,17 +123,13 @@ function WriteGroupList($pdo,$Type){
 <!DOCTYPE html><html lang="en"><head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>jQuery UI Draggable + Sortable</title>
-  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css">
-  <link rel="stylesheet" href="/resources/demos/style.css">
+    <?php PrintHead('群組編輯 | 哈勒筆記')?>
   <link rel="stylesheet" href="../css/Edit_Group.css">
   <style>
     #sortable input{display: none;}
   ul { list-style-type: none; margin: 0; padding: 0; margin-bottom: 10px; }
   li { margin: 5px; padding: 5px; width: 150px; }
   </style>
-  <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-  <script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js"></script>
   <script>
   $( function() {
     $( "#sortable" ).sortable({
@@ -145,6 +145,7 @@ function WriteGroupList($pdo,$Type){
   </script>
 </head>
 <body>
+        <?php PrintTopBar('EditWordGroup','')?>
  
 <ul>
 </ul>
@@ -162,16 +163,15 @@ function WriteGroupList($pdo,$Type){
   <div class="active">
     <form action="" method="post">
       <input type="text" style="display: none;" name="FormType" value="Order">
-      <div id="sortable">
+      
         <?php echo WriteGroupList($pdo,'Order') ?>
-      </div>
-      <input class="output" type="submit">
+        <input class="output" type="submit"><h5>*以拖曳的方式進行排序</h5>
     </form>
   </div>
   <div>
     <form action="" method="post">
       <input type="text" style="display: none;" name="FormType" value="Add">
-      <input type="text" name="GroupName" placeholder="填入新群組名稱">
+      <input type="text" name="GroupName" placeholder="填入新群組名稱" autocomplete="off">
       <input class="output" type="submit" value="新增">
     </form>
   </div>
@@ -194,7 +194,7 @@ function WriteGroupList($pdo,$Type){
         <select type="text" name="GroupId">
           <?php echo WriteGroupList($pdo,'option') ?>
         </select>
-      <input type="text" name="GroupName" placeholder="填入更正後的名稱">
+      <input type="text" name="GroupName" placeholder="填入更正後的名稱" autocomplete="off">
         
       </div>
       <input class="output" type="submit" value="更名">
