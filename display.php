@@ -8,7 +8,7 @@ function PrintTopBar($Type,$ExtarArr){
                 <div id="TopBar">
                     <div>
                         <div id="TopBarMainMenu">
-                            <a href="../choose_Page.php"><p>回選頁</p></a>
+                            <a href="../choosePage.php"><p>回選頁</p></a>
                             <a class="" data-bs-toggle="collapse" href="#GroupABox" role="button" aria-expanded="false" aria-controls="GroupABox">
                                 <p>前往群組</p>
                             </a>
@@ -32,7 +32,7 @@ function PrintTopBar($Type,$ExtarArr){
                 <div id="TopBar">
                     <div>
                         <div id="TopBarMainMenu">
-                            <a href="../choose_Page.php"><p>回選頁</p></a>
+                            <a href="../choosePage.php"><p>回選頁</p></a>
                             <a href="../Text_River.php/?PageId='.$_GET["PageId"].'"><p>返回字詞頁</p></a>
                         </div>
                         <div>

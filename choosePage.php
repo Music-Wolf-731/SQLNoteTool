@@ -1,5 +1,6 @@
 <?php
     session_start();
+    require 'display.php';OnCheckSignIn();
 
 
     $pdo=new PDO('mysql:host=localhost;dbname=notetool;charset=utf8','NoteToolController', 'ToolMaker');

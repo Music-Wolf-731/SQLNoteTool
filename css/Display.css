@@ -18,7 +18,7 @@
 
 body{margin:0;background:var(--BackGround);color:white;font-size: 13px;}
 
-input,select,textarea{background: var(--PainDeCho);color: white;}
+input,select,textarea{background: var(--ThirdColor);color: white;}
 input::placeholder,textarea::placeholder{color: rgba(255, 255, 255, 0.562);}
 
 .hint{

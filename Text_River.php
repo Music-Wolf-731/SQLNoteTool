@@ -333,7 +333,7 @@ $json_array = json_encode($WordArr);
                     <textarea id="Input_wordcontent" name="wordcontent" placeholder="字詞描述或內容，填入送出後在點擊詞卡時將會顯示在'展示'的頁籤中"></textarea>
                 </div>
                 <div id="GroupEditBox" class="FlexBox hidden"><?php WriteGroupEdit($GroupList)?></div>
-                <div id="ThrowOtherPage" class="FlexBox hidden"><?php PrintPageEdit($OnlyPage) ?></div>
+                <div id="ThrowOtherPage" class="FlexBox hidden"><div class="hint">該功能尚未實裝，僅會顯示頁面但點擊並無法跨頁更新<br>預計於6/10前更新完成，請靜待更新</div><?php PrintPageEdit($OnlyPage) ?></div>
             </div>
             <div>
                 <input type="reset">
