@@ -3,6 +3,7 @@
 
 session_start();
 require '../display.php';
+unset($_SESSION['UserData'],$_SESSION['account']);
 ?>
 
 <!DOCTYPE html>
