@@ -1,4 +1,16 @@
 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php PrintHead('登入哈勒筆記') ?>
+</head>
+<body>
+
+
+
 <?php
 
 session_start();
@@ -24,37 +36,9 @@ if (isset($_SESSION['account'])) {
 } else {
 	echo '登入ID或密碼有誤。<br><a href="../login">返回登入頁</a>';
 } 
+
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php PrintHead('登入哈勒筆記') ?>
-</head>
-<body>
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
-      <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-          <img src="..." class="rounded me-2" alt="...">
-          <strong class="me-auto">Bootstrap</strong>
-          <small>11 mins ago</small>
-          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body">
-          Hello, world! This is a toast message.
-        </div>
-      </div>
-    </div>
 
-    <script>
-        function showToast() {
-            var toastEl = document.getElementById('liveToast');
-            var toast = new bootstrap.Toast(toastEl);
-            toast.show();
-        }
-
-    </script>
 </body>
 </html>
