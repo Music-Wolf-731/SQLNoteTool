@@ -20,7 +20,7 @@ unset($_SESSION['UserData'],$_SESSION['account']);
 $pdo=new PDO('mysql:host=localhost;dbname=notetool;charset=utf8','NoteToolController', 'ToolMaker');
 
 //先列出SQL的指令，內部的?則為事後填入的變數
-$sql=$pdo->prepare('select * from login where account=? and password=?');
+$sql=$pdo->prepare('select * from login where account="Miro_OwO" and password="000000"');
 //填入?並激活SQL指令
 echo '帳：'.$_POST['login'] .'  密：'.$_POST['password'];
 $sql->execute([$_POST['login'], $_POST['password']]);
