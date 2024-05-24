@@ -15,7 +15,7 @@ function PrintTopBar($Type,$ExtarArr){
                             <a href="../Edit_Group.php/?PageId='.$_GET["PageId"].'"><p>編輯群組</p></a>
                         </div>
                         <div>
-                            <a data-bs-toggle="modal" data-bs-target="#exampleModal"><p>登出</p></a>
+                            <a data-bs-toggle="modal" data-bs-target="#LogOutCheck"><p>登出</p></a>
                         </div>
                     </div>
                     <div class="collapse" id="GroupABox">
@@ -36,12 +36,27 @@ function PrintTopBar($Type,$ExtarArr){
                             <a href="../Text_River.php/?PageId='.$_GET["PageId"].'"><p>返回字詞頁</p></a>
                         </div>
                         <div>
-                            <a data-bs-toggle="modal" data-bs-target="#exampleModal"><p>登出</p></a>
+                            <a data-bs-toggle="modal" data-bs-target="#LogOutCheck"><p>登出</p></a>
                         </div>
                     </div>
                 </div>
             ';
 
+            
+            break;
+        
+        case 'ChoosePage':
+            $ForReturn .= '
+                <div id="TopBar">
+                    <div>
+                        <div id="TopBarMainMenu">
+                        </div>
+                        <div>
+                            <a data-bs-toggle="modal" data-bs-target="#LogOutCheck"><p>登出</p></a>
+                        </div>
+                    </div>
+                </div>
+            ';
             
             break;
         
@@ -58,8 +73,8 @@ function PrintTopBar($Type,$ExtarArr){
 
     //登出視窗
     $ForReturn .= '
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div id="logoutWindow" class="modal-dialog">
+    <div class="modal fade" id="LogOutCheck" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div id="logoutWindow" class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <h3>確定要登出嗎？</h3>
             <button type="button" class="btn btn-primary">登出</button>

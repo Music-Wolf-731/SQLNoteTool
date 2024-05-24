@@ -1,0 +1,28 @@
+textarea{width:100%;}
+
+#PageList{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    flex-direction: row;
+    padding:1em;
+}
+
+.Page_Pain {
+    background: var(--ThirdColor);
+    width:calc(50vw - 1.3em);
+    padding: 1em;
+    border-radius: 10px;
+    color: white;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#PageList > a:nth-child(n+3) .Page_Pain {
+    margin: 1em 0 0;}
+
+.Special_Check {
+    background: var(--ThirdColor);
+}

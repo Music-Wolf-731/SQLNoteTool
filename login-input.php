@@ -1,11 +1,14 @@
-<?php session_unset(); ?>
+<?php session_unset(); 
+
+require 'display.php';
+?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <?php PrintHead('登入哈勒筆記') ?>
 </head>
 <body>
     <form action="login-output.php" method="post">
