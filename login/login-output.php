@@ -2,7 +2,6 @@
 <?php
 
 session_start();
-unset($_SESSION);
 require '../display.php';
 $pdo=new PDO('mysql:host=localhost;dbname=notetool;charset=utf8','NoteToolController', 'ToolMaker');
 
