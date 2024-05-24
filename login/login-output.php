@@ -23,7 +23,7 @@ $pdo=new PDO('mysql:host=localhost;dbname=notetool;charset=utf8','NoteToolContro
 $sql=$pdo->prepare("select * from login where account='Miro_OwO' and password='000000'");
 //填入?並激活SQL指令
 echo '帳：'.$_POST['login'] .'  密：'.$_POST['password'];
-$sql->execute([$_POST['login'], $_POST['password']]);
+$sql->execute();
 
 //
 foreach ($sql->fetchAll() as $row) { $_SESSION['account'] = $row['account']; echo "有嗎？";}
