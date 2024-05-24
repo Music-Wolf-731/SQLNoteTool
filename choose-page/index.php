@@ -1,6 +1,6 @@
 <?php
     session_start();
-    require 'display.php';OnCheckSignIn();
+    require '../display.php';OnCheckSignIn();
 
 
     $pdo=new PDO('mysql:host=localhost;dbname=notetool;charset=utf8','NoteToolController', 'ToolMaker');
@@ -49,7 +49,7 @@
         $ForReturn = '';
         $ForReturn .= '<div class="title">'.$arr['page_name'] . '</div>';
         $ForReturn .= '<div class="content">'.$arr['page_content'] . '</div>';
-        $ForReturn = '<a href="Text_River.php/?PageId='.$arr['Type_page_id'].'"><div class="Page_Pain">'. $ForReturn . '</div></a>';
+        $ForReturn = '<a href="../textRiver/?PageId='.$arr['Type_page_id'].'"><div class="Page_Pain">'. $ForReturn . '</div></a>';
         echo $ForReturn;
     }
 
@@ -63,28 +63,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        .Page_Pain {
-            width:100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin:0 0 1.3em;
-            border: 2px solid #000;
-            border-radius: 10px;
-        }
-    </style>
+    <?php PrintHead('登入哈勒筆記') ?>
+    <link rel="stylesheet" href="../css/choosePage.css">
 </head>
 <body>
+    <?php PrintTopBar('ChoosePage','');?>
+    <div id='PageList'>
     <?php
-
     
     //填入?並激活SQL指令
     $sql->execute([$_SESSION['UserData']['Id']]);
 	foreach ($sql->fetchAll() as $row) {WritePagePain($row);}
 
     ?>
+    </div>
     <form action="" method="post" style="width:100%;display:flex;flex-wrap: wrap;">
         <select name="Cho_Page" id="" value="" style="width: 40%;">
             <option value="NewType" disabled selected>選擇要編輯的項目</option>
@@ -96,11 +88,12 @@
             ?>
             <option value="NewType" style="color: red;">新增項目</option>
         </select>
-        <input type="text" name="Page_Name" style="width: 56%;">
-        <textarea name="PageContent" id="" style="width: 100%;"></textarea>
+        <input type="text" name="Page_Name">
         <input type="submit" value="提交">  
+        <textarea name="PageContent" id=""></textarea>
     </form>
-    
+
+
 </body>
 </html>
 

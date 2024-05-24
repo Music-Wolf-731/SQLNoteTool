@@ -8,7 +8,7 @@ function PrintTopBar($Type,$ExtarArr){
                 <div id="TopBar">
                     <div>
                         <div id="TopBarMainMenu">
-                            <a href="../choosePage.php"><p>回選頁</p></a>
+                            <a href="../choose-page"><p>回選頁</p></a>
                             <a class="" data-bs-toggle="collapse" href="#GroupABox" role="button" aria-expanded="false" aria-controls="GroupABox">
                                 <p>前往群組</p>
                             </a>
@@ -32,8 +32,8 @@ function PrintTopBar($Type,$ExtarArr){
                 <div id="TopBar">
                     <div>
                         <div id="TopBarMainMenu">
-                            <a href="../choosePage.php"><p>回選頁</p></a>
-                            <a href="../Text_River.php/?PageId='.$_GET["PageId"].'"><p>返回字詞頁</p></a>
+                            <a href="../choose-page"><p>回選頁</p></a>
+                            <a href="../textRiver/?PageId='.$_GET["PageId"].'"><p>返回字詞頁</p></a>
                         </div>
                         <div>
                             <a data-bs-toggle="modal" data-bs-target="#LogOutCheck"><p>登出</p></a>
@@ -77,7 +77,7 @@ function PrintTopBar($Type,$ExtarArr){
       <div id="logoutWindow" class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <h3>確定要登出嗎？</h3>
-            <button type="button" class="btn btn-primary">登出</button>
+            <a href="logout.php"><button type="button" class="btn btn-primary">登出</button></a>
         </div>
       </div>
     </div>

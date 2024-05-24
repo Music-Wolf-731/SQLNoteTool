@@ -1,7 +1,7 @@
 <?php session_unset(); 
 unset($_SESSION);
 
-require 'display.php';
+require '../display.php';
 ?>
 
 <!DOCTYPE html>

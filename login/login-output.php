@@ -3,7 +3,7 @@
 
 session_start();
 unset($_SESSION);
-require 'display.php';
+require '../display.php';
 $pdo=new PDO('mysql:host=localhost;dbname=notetool;charset=utf8','NoteToolController', 'ToolMaker');
 
 //先列出SQL的指令，內部的?則為事後填入的變數
@@ -21,9 +21,9 @@ if (isset($_SESSION['account'])) {
 		$_SESSION['UserData']['name'] = $row['user_name'];
 		$_SESSION['UserData']['avatar'] = $row['avatar_img'];
 	}
-	echo $_SESSION['UserData']['name'] . '登錄成功<br><a href="choosePage.php">前往筆記選頁</a>' ;
+	echo $_SESSION['UserData']['name'] . '登錄成功<br><a href="../choose-page">前往筆記選頁</a>' ;
 } else {
-	echo '登入ID或密碼有誤。<br><a href="login-input.php">返回登入頁</a>';
+	echo '登入ID或密碼有誤。<br><a href="../login">返回登入頁</a>';
 } 
 ?>
 
