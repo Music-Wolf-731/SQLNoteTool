@@ -1,4 +1,9 @@
 
+<?php
+
+session_start();
+require '../display.php';
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -10,11 +15,7 @@
 <body>
 
 
-
 <?php
-
-session_start();
-require '../display.php';
 $pdo=new PDO('mysql:host=localhost;dbname=notetool;charset=utf8','NoteToolController', 'ToolMaker');
 
 //先列出SQL的指令，內部的?則為事後填入的變數

@@ -77,7 +77,7 @@ function PrintTopBar($Type,$ExtarArr){
       <div id="logoutWindow" class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <h3>確定要登出嗎？</h3>
-            <a href="logout.php"><button type="button" class="btn btn-primary">登出</button></a>
+            <a href="../logout"><button type="button" class="btn btn-primary">登出</button></a>
         </div>
       </div>
     </div>
@@ -87,7 +87,7 @@ function PrintTopBar($Type,$ExtarArr){
 
 function OnCheckSignIn(){
     if(!isset($_SESSION['UserData'])){
-        echo '<a href="../login-input.php">請先進行登錄</a>';
+        echo '<a href="../login">請先進行登錄</a>';
         exit(); 
     }
 }
