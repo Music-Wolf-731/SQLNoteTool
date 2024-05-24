@@ -12,8 +12,11 @@
     --PainDeCho:rgb(147, 60, 173);
     --PainCho:rgb(0 110 175);
     
+    --SpecialColor_A: rgb(205, 177, 23);
+    
     --TopBarHeight: 3em;
     --TopBarFontSize: 2em;
+
 }
 
 body{margin:0;background:var(--BackGround);color:white;font-size: 13px;}
@@ -31,6 +34,7 @@ input::placeholder,textarea::placeholder{color: rgba(255, 255, 255, 0.562);}
     flex-direction: column;
     align-items: center;
     background: rgba(255, 255, 255, 0.15);
+    text-align: center;
 }
  
 #logoutWindow > div{

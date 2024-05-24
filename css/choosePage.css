@@ -8,7 +8,13 @@ textarea{width:100%;}
     padding:1em;
 }
 
-.Page_Pain {
+#PageList h3{
+    font-size: 1.5em;
+}
+
+.Page_Pain {position: relative;}
+
+.Page_Pain a {
     background: var(--ThirdColor);
     width:calc(50vw - 1.3em);
     padding: 1em;
@@ -20,9 +26,41 @@ textarea{width:100%;}
     align-items: center;
 }
 
-#PageList > a:nth-child(n+3) .Page_Pain {
+.PaneIcon {
+    position: relative;
+    top: calc(100% - 2em);left: calc(100% - 2em);
+    width: 1.5em;height: 1.5em;
+    border-radius: 100%;
+    border: 2px solid  var(--SpecialColor_A);
+    transition: all 0.5s ease;
+}
+
+.PaneIcon:hover{
+    background: rgba(0, 0, 0, 0);
+    background: var(--SpecialColor_A);
+    border: 0px solid  var(--SpecialColor_A);
+}
+
+#PageList >  .Page_Pain:nth-child(n+3) a {
     margin: 1em 0 0;}
 
 .Special_Check {
     background: var(--ThirdColor);
+}
+
+#CheckBox > div{
+    display: flex;justify-content: space-between;
+    height:0;width:100%;
+    transition: all 0.5s ease;
+    overflow: hidden;
+    /* border: 2px solid #000; */
+}
+
+#CheckBox input{padding:0  1.2em;transition: all 0.5s ease;}
+
+#checkIfDel input:hover{background: red;}
+
+#CheckBox > .active{
+    height:5em;
+    padding: .5em;
 }
