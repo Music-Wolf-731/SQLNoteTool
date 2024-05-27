@@ -127,8 +127,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         echo "錯誤代碼: " . $e->getCode() . "<br>";
     }   
     
-    header("Location: ".$_SERVER['HTTP_REFERER']);
-    exit();
+    // header("Location: ".$_SERVER['HTTP_REFERER']);
+    // exit();
 }
 $ForSQL = 'SELECT * FROM word LEFT JOIN word_page_bridge ON  word.word_id = word_page_bridge.word_id ';
 $ForSQL .= 'WHERE Type_page_id = ? AND user_id = ?';

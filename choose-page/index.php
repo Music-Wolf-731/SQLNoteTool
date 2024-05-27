@@ -121,21 +121,29 @@
     WritePagePain($PageListArr);
     ?>
     </div>
-    <form action="" method="post" style="width:100%;display:flex;flex-wrap: wrap;">
-        <select name="Cho_Page" id="" value="" style="width: 40%;">
-            <option value="NewType" disabled selected>選擇要編輯的項目</option>
-            <?php
-                $sql->execute([$_SESSION['UserData']['Id']]);
-                foreach ($PageListArr as $key => $value) {
-                    echo '<option value="'.$key.'">'.$value['Name'].'</option>';
-                }
-            ?>
-            <option value="NewType" style="color: red;">新增項目</option>
-        </select>
-        <input type="text" name="Page_Name">
-        <input type="submit" value="提交">  
-        <textarea name="PageContent" id=""></textarea>
-    </form>
+
+    <div id="EditBox">
+        <div id="ButtomMark" data-bs-toggle="collapse" href="#ButtomFormBox" role="button" aria-expanded="false" aria-controls="ButtomFormBox">
+            <p>編輯窗</p>
+        </div>
+        <div id="ButtomFormBox" class="collapse">
+            <form action="" method="post">
+                <input type="text" name="Cho_Page" class='D_None Edit_PageId'>
+                <div id="FormTop">
+                    <h3 class="PageName">新增頁面</h3>
+                    <div>
+                        <input id="Form_Public" type="checkbox" name="Public" value="true">
+                        <label for="Form_Public">公開(未實裝)</label>
+                    </div>
+                </div>
+                <h3>名稱</h3>
+                <input type="text" name="Page_Name" placeholder="頁目名稱"><hr>
+                <h3>描述</h3>
+                <textarea name="PageContent" id="" placeholder='本填入框將用於描述頁目'></textarea><hr>
+                <input type="submit" value="提交">  
+            </form>
+        </div>
+    </div>
 
     <!-- Modal -->
     <div class="modal fade" id="CopyPage" tabindex="-1" aria-hidden="true">
@@ -145,6 +153,7 @@
                     <h1 id="FloatTitle" class="modal-title fs-5">這是名稱</h1>
                     <!-- <button type="button" class="ScrollOutBut" ScrollOut="checkIfCopy" InType="Copy">複製</button> -->
                     <button type="button" class="ScrollOutBut" ScrollOut="checkIfDel" InType="Delete">刪除</button>
+                    <button type="button" id="FlowEditBut" data-bs-toggle="modal" data-bs-target="#CopyPage" >編輯</button>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div id="FloatContent" class="modal-body">
@@ -152,7 +161,7 @@
                 </div>
                 <form action="" method="post" >
                     <div id="CheckBox">
-                            <div><input id="InputType" type="text" name="Type"><input id="InputPageId" type="text" name="PageId"></div>
+                            <div><input class="InputType" type="text" name="Type"><input class="InputPageId" type="text" name="PageId"></div>
                             <div id="checkIfDel"><p>將會刪除本頁以及本頁獨有的字詞。<br>確定刪除嗎？此操作將不可逆。</p><input type="submit" value="確定"></div>
                             <div id="checkIfCopy"><p>註：字詞編號不受頁目的影響，若想複製字詞請於頁內操作。</p><input type="submit" value="確定"></div>
                     </div>
@@ -168,7 +177,7 @@
                 const ScrollType = event.target.getAttribute('ScrollOut');
                 document.getElementById(ScrollType).classList.add('active')
 
-                document.getElementById('InputType').value = event.target.getAttribute('InType');
+                document.querySelector('#CheckBox .InputType').value = event.target.getAttribute('InType');
             })
         })
 
@@ -176,6 +185,7 @@
         var ScrollOutBut = document.querySelectorAll('.ScrollOutBut');
         
         document.addEventListener('click', function(event) {
+
             var isScrollOutBut = Array.from(ScrollOutBut).some(function(element) {
                 return element.contains(event.target);
             });
@@ -188,18 +198,54 @@
             }
         });
 
+        //
+        document.getElementById('ButtomMark').addEventListener('click' , function(event){
+                document.querySelector('#FormTop .PageName').innerHTML = '新增頁目';
+            document.querySelector('.Edit_PageId').value = 'NewType';
+        })
+
+
+        //點擊edit時將替換描述窗內的資料
         document.querySelectorAll('.PaneIcon').forEach(value => {
             value.addEventListener('click', function(event){
                 console.log(PageListArr)
                 const PageId = event.target.getAttribute('PageId');
+
+                //替換描述框
                 document.getElementById('FloatTitle').innerHTML = PageListArr[PageId]['Name'];
                 document.getElementById('FloatContent').innerHTML = PageListArr[PageId]['content'];
-                document.getElementById('InputPageId').value = PageId;
+                document.querySelector('#CheckBox .InputPageId').value = PageId;
+
+                //替換編輯窗
+                document.querySelector('#FormTop .PageName').innerHTML = '編輯：'+ PageListArr[PageId]['Name'];
+                document.querySelector('.Edit_PageId').value = PageId;
             })
             
         })
 
 
+
+        //點擊edit時將編輯窗收起
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取需要隐藏的 Collapse 元件
+            const collapseElement = document.getElementById('ButtomFormBox');
+            // 创建 Collapse 实例
+            const collapseInstance = new bootstrap.Collapse(collapseElement, { toggle: false });
+
+            // 为所有 PaneIcon 元素添加点击事件监听器
+            document.querySelectorAll('.PaneIcon').forEach(function(element) {
+                element.addEventListener('click', function() {
+                    // 调用 Bootstrap Collapse 实例的 hide() 方法隐藏元素
+                    collapseInstance.hide();
+                });
+            });
+        });
+        
+        //點擊edit展開編輯窗
+        document.getElementById('FlowEditBut').addEventListener('click',function(){
+            const collapseElementList = document.querySelectorAll('.collapse');
+            const collapseList = [...collapseElementList].map(collapseEl => new bootstrap.Collapse(collapseEl));
+        })
     </script>
 </body>
 </html>

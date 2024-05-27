@@ -19,10 +19,14 @@
 
 }
 
+
+
 body{margin:0;background:var(--BackGround);color:white;font-size: 13px;}
 
 input,select,textarea{background: var(--ThirdColor);color: white;}
 input::placeholder,textarea::placeholder{color: rgba(255, 255, 255, 0.562);}
+
+.D_None {display: none;}
 
 .hint{
     width: calc(100% - 1em) !important;
@@ -102,3 +106,7 @@ input::placeholder,textarea::placeholder{color: rgba(255, 255, 255, 0.562);}
 }
 
 #TopBar .FlexBox p{margin: .2em .8em;}
+
+@media screen and (max-width: 768px) {
+    :root {font-size: .7em;}
+}
