@@ -77,23 +77,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
                 $stmt->execute();
                 //帶有CTE的查詢                
                 if(isset($_POST['OnEditGroup'])){
-                    $DeleteGroupSql = '
-                        DELETE FROM word_group_bridge
-                        WHERE (word_id, group_id) IN (
-                            SELECT wgb.word_id, wgb.group_id
-                            FROM word_group_bridge wgb
-                            LEFT JOIN word_group g ON wgb.group_id = g.group_id
-                            WHERE g.Type_page_id = :Page AND g.user_id = :user_id AND wgb.word_id = :wordId
-                        )
-                    ';
 
-                    //錨定SQL定義
-                    $stmt = $pdo->prepare($DeleteGroupSql);
+
+                    // 創建一個臨時表並選擇需要刪除的 ID
+                    $CreateTempTableSql = '
+                        CREATE TEMPORARY TABLE temp_word_group_ids AS
+                        SELECT wgb.word_id, wgb.group_id
+                        FROM word_group_bridge wgb
+                        LEFT JOIN word_group g ON wgb.group_id = g.group_id
+                        WHERE g.Type_page_id = :Page AND g.user_id = :user_id AND wgb.word_id = :wordId
+                    ';
+                    $stmt = $pdo->prepare($CreateTempTableSql);
                     $stmt->bindParam(':user_id', $SQL_user_id);
                     $stmt->bindParam(':Page', $SQL_Page);
                     $stmt->bindParam(':wordId', $SQL_word_id);
                     $stmt->execute();
-                
+
+                    // 使用臨時表進行刪除操作
+                    $DeleteGroupSql = '
+                        DELETE FROM word_group_bridge
+                        WHERE (word_id, group_id) IN (
+                            SELECT word_id, group_id FROM temp_word_group_ids
+                        )
+                    ';
+                    $stmt = $pdo->prepare($DeleteGroupSql);
+                    $stmt->execute();
+
+
                     if(isset($_POST['group'])){
                         $ForAddGroupSQL = 'INSERT INTO word_group_bridge(word_id,group_id)
                         VALUES ';
