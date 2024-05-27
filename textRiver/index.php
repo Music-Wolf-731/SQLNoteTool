@@ -31,9 +31,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
             if($_POST['word']==''){header("Location: ".$_SERVER['HTTP_REFERER']);exit();}
             //編輯或是新增字詞
             
+            if(!isset($_POST['edit'])){
+                //新增一個項目並且將wordId調出
+                $ForSql = 'INSERT INTO word (user_id) VALUES ('.$_SESSION['UserData']['Id'].')';
+                $stmt = $pdo->prepare($ForSql);$stmt->execute();
+                $_POST['wordId']=$pdo->lastInsertId();
+                $ForSql = 'INSERT INTO word_page_bridge (word_id, Type_page_id) VALUES ('.$pdo->lastInsertId().', '.$_GET['PageId'].');';
+                $stmt = $pdo->prepare($ForSql);$stmt->execute();
+            }
+            
+            
 
-            if(isset($_POST['edit'])){
-                
                 $ForSql = '
                     UPDATE word 
                     SET
@@ -42,16 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
                     word_content = :word_content 
                     WHERE user_id = :user_id AND word_id = :wordId;
                     ';
-            }else{
-                
-                $ForSql = '
-                    INSERT INTO word(user_id,word,word_name,word_content)
-                    VALUES (:user_id, :word, :word_name, :word_content);
-                    SET @last_id_in_A_table = LAST_INSERT_ID(); -- 获取自动生成的 ID
 
-                    -- 使用获取的 ID，在 bridge_table 插入新记录
-                    INSERT INTO word_page_bridge (word_id, Type_page_id) VALUES (@last_id_in_A_table, :Page);';
-            }
 
 
                 //置入SQL定義
@@ -63,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
                 $SQL_Page = $_GET['PageId'];
 
 
-
+                echo $SQL_word_id;
 
                 //錨定SQL定義
                 $stmt = $pdo->prepare($ForSql);
@@ -72,12 +71,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
                 $stmt->bindParam(':word', $SQL_word);
                 $stmt->bindParam(':word_name', $SQL_word_name);
                 $stmt->bindParam(':word_content', $SQL_word_content);
+                $stmt->bindParam(':wordId', $SQL_word_id);
                 
-                if(isset($_POST['edit'])){
-                    $stmt->bindParam(':wordId', $SQL_word_id);
-                }else{
-                    $stmt->bindParam(':Page', $SQL_Page);
-                }
                 
                 $stmt->execute();
                 //帶有CTE的查詢                
@@ -99,14 +94,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
                     $stmt->bindParam(':wordId', $SQL_word_id);
                     $stmt->execute();
                 
-                    if($_POST['group']){
+                    if(isset($_POST['group'])){
                         $ForAddGroupSQL = 'INSERT INTO word_group_bridge(word_id,group_id)
                         VALUES ';
                         foreach ($_POST['group'] as $key => $value) { 
-                            //對新增和編輯的編碼做出差異
-                            $var = (isset($_POST['edit']))? $SQL_word_id : '@last_id_in_A_table';
-                            //置入所有群組錨點
-                            $ForAddGroupSQL .= ' ('.$var.','.$value.'),';
+                            $ForAddGroupSQL .= ' ('.$_POST['wordId'].','.$value.'),';
                         }
                         $ForAddGroupSQL = rtrim($ForAddGroupSQL,',') . ';';
 
@@ -115,6 +107,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
                         $stmt->execute();
                     }
                 }
+                if(isset($_POST['OnEditPage'])){
+                    $DeleteGroupSql = '
+                        DELETE FROM word_page_bridge
+                        WHERE word_id = :wordId;
+                    ';
+
+                    //錨定SQL定義
+                    $stmt = $pdo->prepare($DeleteGroupSql);
+                    $stmt->bindParam(':wordId', $SQL_word_id);
+                    $stmt->execute();
+
+                    $ForAddPageSQL = '
+                        INSERT INTO word_page_bridge (Type_page_id,word_id)
+                        value ('.$SQL_Page.','.$SQL_word_id.')
+                    ';
+                
+                    if(isset($_POST['page'])){
+                        foreach ($_POST['page'] as $key => $value) { 
+                            $ForAddPageSQL .= ',('.$value.','.$_POST['wordId'].')';
+                        }
+                    }
+                    $stmt = $pdo->prepare($ForAddPageSQL);
+                    $stmt->execute();
+                }
+
                 
         }
             $stmt->closeCursor();
@@ -127,8 +144,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         echo "錯誤代碼: " . $e->getCode() . "<br>";
     }   
     
-    // header("Location: ".$_SERVER['HTTP_REFERER']);
-    // exit();
+    header("Location: ".$_SERVER['HTTP_REFERER']);
+    exit();
 }
 $ForSQL = 'SELECT * FROM word LEFT JOIN word_page_bridge ON  word.word_id = word_page_bridge.word_id ';
 $ForSQL .= 'WHERE Type_page_id = ? AND user_id = ?';
@@ -310,6 +327,7 @@ $json_array = json_encode($WordArr);
                     <div style="display:none;">
                         <input id="Input_Word_Id" type="text" name="wordId">
                         <input id="OnEditGroup" type="checkbox" name="OnEditGroup" value="true">
+                        <input id="OnEditPage" type="checkbox" name="OnEditPage" value="true">
                     </div>
                     <div class="inputflex">
                         <div>
@@ -420,6 +438,12 @@ $json_array = json_encode($WordArr);
     document.getElementById('GroupEditBox').querySelectorAll('label').forEach(checkbox => {
         checkbox.addEventListener('click', () => {
             document.getElementById('OnEditGroup').checked = true;
+        });
+    })
+
+    document.getElementById('ThrowOtherPage').querySelectorAll('label').forEach(checkbox => {
+        checkbox.addEventListener('click', () => {
+            document.getElementById('OnEditPage').checked = true;
         });
     })
 
