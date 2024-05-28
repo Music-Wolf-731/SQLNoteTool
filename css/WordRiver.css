@@ -183,7 +183,5 @@ input:checked + label{
 }
 
 @media screen and (max-width: 900px) {
-    #Switch{
-        font-size: calc(1.5vw + 5px);
-    }
+    body{font-size: calc(1.5vw + 5px);}
 }
