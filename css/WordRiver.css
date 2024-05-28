@@ -182,3 +182,8 @@ input:checked + label{
     background: var(--PainCho) !important;
 }
 
+@media screen and (max-width: 900px) {
+    #Switch{
+        font-size: calc(1.5vw + 5px);
+    }
+}

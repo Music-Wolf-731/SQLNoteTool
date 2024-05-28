@@ -319,7 +319,7 @@ $json_array = json_encode($WordArr);
         <div id="Switch">
             <div id="PageBox">
                 <div onclick="" class="active"><p>展示</p></div>
-                <div onclick=""><p>編輯文字</p></div>
+                <div onclick=""><p>編輯</p></div>
                 <div onclick=""><p>群組</p></div>
                 <div onclick=""><p>跨頁</p></div>
             </div>
