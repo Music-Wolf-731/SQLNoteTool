@@ -102,6 +102,7 @@ h3 {font-size:1.5em}
     flex-direction: row;
     justify-content: space-between;
     user-select: none;
+    flex-wrap: wrap
 }
 
 #Switch > div{
@@ -180,8 +181,4 @@ form #Input_wordcontent{
 }
 input:checked + label{
     background: var(--PainCho) !important;
-}
-
-@media screen and (max-width: 600px) {
-    body{font-size: calc(1vw + 6px);}
 }

@@ -107,6 +107,7 @@ input::placeholder,textarea::placeholder{color: rgba(255, 255, 255, 0.562);}
 
 #TopBar .FlexBox p{margin: .2em .8em;}
 
-@media screen and (max-width: 768px) {
-    :root {font-size: .7em;}
+
+@media screen and (max-width: 600px) {
+    body{font-size: calc(1vw + 6px);}
 }
