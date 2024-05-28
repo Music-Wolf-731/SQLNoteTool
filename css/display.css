@@ -103,6 +103,7 @@ input::placeholder,textarea::placeholder{color: rgba(255, 255, 255, 0.562);}
 #TopBar .FlexBox {
     width:100%;
     display: flex;
+    flex-wrap: wrap;
 }
 
 #TopBar .FlexBox p{margin: .2em .8em;}

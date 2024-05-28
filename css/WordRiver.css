@@ -102,7 +102,6 @@ h3 {font-size:1.5em}
     flex-direction: row;
     justify-content: space-between;
     user-select: none;
-    flex-wrap: wrap
 }
 
 #Switch > div{
