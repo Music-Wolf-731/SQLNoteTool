@@ -1,4 +1,9 @@
 <?php 
+function SessionSet(){
+    ini_set('session.cookie_lifetime', 7200);
+    session_set_cookie_params(7200);
+    session_start();
+}
 
 function PrintTopBar($Type,$ExtarArr){
     $ForReturn = '';

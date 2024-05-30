@@ -1,6 +1,5 @@
 <?php 
-session_start();
-require '../display.php';OnCheckSignIn();
+require '../display.php';SessionSet();OnCheckSignIn();
 
 $pdo=new PDO('mysql:host=localhost;dbname=notetool;charset=utf8','NoteToolController', 'ToolMaker');
 if ($_SERVER["REQUEST_METHOD"] == "POST"){
