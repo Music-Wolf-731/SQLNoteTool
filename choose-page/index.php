@@ -113,7 +113,6 @@
 </head>
 <body>
     <?php PrintTopBar('ChoosePage','');?>
-    <div class="hint">本頁尚未進行版型修繕，但功能狀態正常請安心使用<br>下方下拉式選單可以進行新增或是修改現有頁目名稱和描述，小框格為名稱，大框格為描述</div>
     <div id='PageList'>
     <?php
     
@@ -146,7 +145,7 @@
 
     <!-- Modal -->
     <div class="modal fade" id="CopyPage" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog  modal-dialog-centered">
             <div class="Special_Check modal-content">
                 <div class="modal-header">
                     <h1 id="FloatTitle" class="modal-title fs-5">這是名稱</h1>
