@@ -122,7 +122,7 @@ function WriteGroupList($pdo,$Type){
 <!DOCTYPE html><html lang="en"><head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-    <?php PrintHead('群組編輯 | 哈勒筆記')?>
+    <?php echo PrintHead('群組編輯 | 哈勒筆記')?>
   <link rel="stylesheet" href="../css/Edit_Group.css">
   <style>
     #sortable input{display: none;}

@@ -292,7 +292,7 @@ $json_array = json_encode($WordArr);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php PrintHead($PageName)?>
+    <?php echo PrintHead($PageName)?>
     <link rel="stylesheet" href="../css/WordRiver.css">
     <script>
     // 在 JavaScript 中使用 JSON 字串

@@ -1,7 +1,7 @@
 <?php 
 function SessionSet(){
-    ini_set('session.cookie_lifetime', 7200);
-    session_set_cookie_params(7200);
+    ini_set('session.cookie_lifetime', 36000);
+    session_set_cookie_params(36000);
     session_start();
 }
 
@@ -92,12 +92,45 @@ function PrintTopBar($Type,$ExtarArr){
 
 function OnCheckSignIn(){
     if(!isset($_SESSION['UserData'])){
-        echo '<a href="../login">請先進行登錄</a>';
+        $BackBut = '<a href="../login"><div>點我前往登錄頁</div></a>';
+    }else{
+        $BackBut = '<a href="../choose-page"><div>點我回頁目總款</div></a>';
+    }
+    if(!isset($_SESSION['UserData'])){
+        echo '
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <style>
+                    body{
+                        height: 100vh;
+                        display: flex;
+                        align-items: center;
+                        flex-direction: column;
+                        justify-content: space-around;
+                    }
+                </style>
+                '. PrintHead('哈勒筆記 | 登入過渡') .'
+
+            </head>
+            
+            <body>
+                <div id="OnlyBox">
+                    <div>
+                        <p>您無權查看目前內容</p>
+                        '.$BackBut.'
+                    </div>
+                </div>
+            </body>
+            </html>
+        ';
         exit(); 
     }
 }
 function PrintHead($title){
-    echo'
+    return '
         <title>'.$title.'</title>
         <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
         <script src="bootstrap/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -113,3 +146,4 @@ function PrintHead($title){
 }
 
 ?>
+

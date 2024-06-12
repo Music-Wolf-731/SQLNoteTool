@@ -107,7 +107,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php PrintHead('登入哈勒筆記') ?>
+    <?php echo PrintHead('登入哈勒筆記') ?>
     <link rel="stylesheet" href="../css/choosePage.css">
     <script>var PageListArr = <?php echo $json_array?></script>
 </head>

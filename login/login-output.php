@@ -11,7 +11,18 @@ require '../display.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php PrintHead('登入哈勒筆記') ?>
+	<style>
+		
+		body{
+			height: 100vh;
+			display: flex;
+			align-items: center;
+			flex-direction: column;
+			justify-content: space-around;
+		}
+                
+	</style>
+    <?php echo PrintHead('登入哈勒筆記') ?>
 </head>
 <body>
 
@@ -34,9 +45,25 @@ if (isset($_SESSION['account'])) {
 		$_SESSION['UserData']['name'] = $row['user_name'];
 		$_SESSION['UserData']['avatar'] = $row['avatar_img'];
 	}
-	echo $_SESSION['UserData']['name'] . '登錄成功<br><a href="../choose-page">前往筆記選頁</a>' ;
+	echo '
+                <div id="OnlyBox">
+                    <div>
+						<p>' . $_SESSION['UserData']['name'] . ' 
+                        歡迎登入</p>
+                        <a href="../choose-page"><div>前往筆記選頁</div></a>
+                    </div>
+                </div>' ;
 } else {
-	echo '登入ID或密碼有誤。<br><a href="../login">返回登入頁</a>';
+	echo '
+	
+                <div id="OnlyBox">
+                    <div>
+						<p>登入資訊有誤</p>
+                        <a href="../login"><div>返回登入頁</div></a>
+                    </div>
+                </div>
+	
+				';
 } 
 
 ?>

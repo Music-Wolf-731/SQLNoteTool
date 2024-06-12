@@ -1,5 +1,11 @@
-<?php session_unset(); 
-unset($_SESSION);
+<?php 
+session_start();
+if(isset($_SESSION['UserData'])){
+    header("Location: ../choose-page");
+}
+// exit();
+// session_unset(); 
+// unset($_SESSION);
 
 require '../display.php';
 ?>
@@ -9,7 +15,7 @@ require '../display.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php PrintHead('登入哈勒筆記') ?>
+    <?php echo PrintHead('登入哈勒筆記') ?>
 </head>
 <body>
     <form action="login-output.php" method="post">
