@@ -1,7 +1,7 @@
 <?php 
 function SessionSet(){
-    ini_set('session.cookie_lifetime', 36000);
-    session_set_cookie_params(36000);
+    ini_set('session.cookie_lifetime', 172800);
+    session_set_cookie_params(172800);
     session_start();
 }
 
@@ -90,13 +90,18 @@ function PrintTopBar($Type,$ExtarArr){
     echo $ForReturn;
 }
 
-function OnCheckSignIn(){
+function OnCheckSignIn($UnlimitedEnter = false){
     if(!isset($_SESSION['UserData'])){
         $BackBut = '<a href="../login"><div>點我前往登錄頁</div></a>';
     }else{
         $BackBut = '<a href="../choose-page"><div>點我回頁目總款</div></a>';
     }
-    if(!isset($_SESSION['UserData'])){
+    //未登入則會禁止進入
+    $NoEnter = (!isset($_SESSION['UserData']))?true:false;
+    //無限制進入若開啟，則會取消觀看限制
+    $NoEnter = ($UnlimitedEnter)?false:$NoEnter;
+
+    if($NoEnter){
         echo '
             <!DOCTYPE html>
             <html lang="en">

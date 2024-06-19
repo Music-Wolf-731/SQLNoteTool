@@ -1,7 +1,24 @@
 <?php 
-require '../display.php';SessionSet();OnCheckSignIn();
+require '../display.php';SessionSet();
 
 $pdo=new PDO('mysql:host=localhost;dbname=notetool;charset=utf8','NoteToolController', 'ToolMaker');
+
+$ForSQL = 'SELECT * FROM type_page WHERE Type_page_id = ? ;';
+$CheckPageData = $pdo->prepare($ForSQL);
+$CheckPageData -> execute([$_GET['PageId']]);
+
+$PageData = $CheckPageData->fetch(PDO::FETCH_ASSOC);
+$PageOwnUser = $PageData['user_id'];
+$OwnerOpen = (isset($_SESSION['UserData']['Id']) and $PageOwnUser == $_SESSION['UserData']['Id'])?true:false;
+$CanDisplay = ($OwnerOpen or $PageData['page_public'] == true)?true : false ;
+// print_r($PageData);echo '<br>';
+// if($OwnerOpen){echo '是';}else{echo '否';}
+// if($PageData['page_public']){echo '是';}else{echo '否';}
+// if($CanDisplay){echo '是';}else{echo '否';}
+
+OnCheckSignIn($CanDisplay);
+
+
 if ($_SERVER["REQUEST_METHOD"] == "POST"){
     print_r($_POST);
     
@@ -160,7 +177,7 @@ $ForSQL = 'SELECT * FROM word LEFT JOIN word_page_bridge ON  word.word_id = word
 $ForSQL .= 'WHERE Type_page_id = ? AND user_id = ?';
 
 $sql=$pdo->prepare($ForSQL);
-$sql->execute([$_GET['PageId'] , $_SESSION['UserData']['Id']]);
+$sql->execute([$_GET['PageId'] , $PageOwnUser]);
 
 //渲染文字陣列及基本資料置入
 $WordArr = [];$OnlyWordId=[];
@@ -181,7 +198,7 @@ $ForSQL = '
     WHERE user_id = ? and Type_page_id = ?
     ORDER BY `Order` ASC;
 ';
-$sql=$pdo->prepare($ForSQL);$sql->execute( [$_SESSION['UserData']['Id'] , $_GET['PageId']] );
+$sql=$pdo->prepare($ForSQL);$sql->execute( [$PageOwnUser , $_GET['PageId']] );
 foreach ($sql->fetchAll() as $row) {
     $GroupList[$row['group_id']] = $row['group_name'];
 }
@@ -190,7 +207,7 @@ $GroupList['N'] = '未分組';
 //渲染本頁群組和字詞的關聯性資料
 $PrintGroupSQL = '';
 foreach ($OnlyWordId as $key => $value) {$PrintGroupSQL.=$value.',';}
-$var='SELECT group_id FROM `word_group` WHERE Type_page_id = '.$_GET['PageId'].' AND user_id = '.$_SESSION['UserData']['Id'];
+$var='SELECT group_id FROM `word_group` WHERE Type_page_id = '.$_GET['PageId'].' AND user_id = '.$PageOwnUser;
 
 $PrintGroupSQL = '
     SELECT * 
@@ -204,7 +221,7 @@ foreach ($sql->fetchAll() as $row) {
 
 
 //渲染全頁數資料
-$PrintPage_SQL = 'SELECT Type_page_id,page_name FROM `type_page` WHERE user_id = '.$_SESSION['UserData']['Id'] ;
+$PrintPage_SQL = 'SELECT Type_page_id,page_name FROM `type_page` WHERE user_id = '.$PageOwnUser ;
 $sql=$pdo->prepare($PrintPage_SQL);$sql->execute();
 foreach ($sql->fetchAll() as $row) {
     if($row['Type_page_id']==$_GET['PageId']){$PageName = $row['page_name'] . ' | 哈勒筆記';continue;}
@@ -317,10 +334,16 @@ $json_array = json_encode($WordArr);
     <div id="FormBox">
         <div id="Switch">
             <div id="PageBox">
+
+                <?php if($OwnerOpen){echo '
                 <div onclick="" class="active"><p>展示</p></div>
                 <div onclick=""><p>編輯</p></div>
                 <div onclick=""><p>群組</p></div>
                 <div onclick=""><p>跨頁</p></div>
+                ';}?>
+                
+                
+                
             </div>
             <div id="SizeBox">
                 <div onclick="ZoomEditBox('N',this)"><p>隱藏</p></div>
@@ -359,8 +382,8 @@ $json_array = json_encode($WordArr);
                     </div>
                     <textarea id="Input_wordcontent" name="wordcontent" placeholder="字詞描述或內容，填入送出後在點擊詞卡時將會顯示在'展示'的頁籤中"></textarea>
                 </div>
-                <div id="GroupEditBox" class="FlexBox hidden"><?php WriteGroupEdit($GroupList)?></div>
-                <div id="ThrowOtherPage" class="FlexBox hidden"><?php PrintPageEdit($OnlyPage) ?></div>
+                <div id="GroupEditBox" class="FlexBox hidden"><?php if($OwnerOpen){WriteGroupEdit($GroupList);}?></div>
+                <div id="ThrowOtherPage" class="FlexBox hidden"><?php if($OwnerOpen){PrintPageEdit($OnlyPage);} ?></div>
             </div>
             <div>
                 <input type="reset">
