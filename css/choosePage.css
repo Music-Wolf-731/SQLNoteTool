@@ -41,6 +41,19 @@ textarea{width:100%;}
 
 #ButtomFormBox{width: 60%;}
 
+
+#ButtomFormBox input[type="checkbox"]{display: none;}
+input[type="checkbox"] + label {
+    user-select: none;
+    border-radius: 5px;
+    transition: all .3s ease-in-out 0s;
+    padding: .4em .8em ;
+    background: var(--ThirdColor);
+}
+input[type="checkbox"]:checked + label {
+    background: var(--PainCho);
+}
+
 #ButtomMark{
     height: 3em;
     border-radius: 10em 10em 0 0;

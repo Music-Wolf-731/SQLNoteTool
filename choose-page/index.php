@@ -8,18 +8,13 @@
         print_r($_POST);
         if(isset($_POST['Cho_Page']) and $_POST['Cho_Page'] !== 'NewType'){
             
-            if($_POST['Page_Name'] == 'delete'){
-                $ForSQL = 'DELETE FROM type_page WHERE Type_page_id = '.$_POST['Cho_Page'];
-            }else{
-                $ForSQL = 'UPDATE type_page SET ';
-                if($_POST['Page_Name'] !== ''){$ForSQL .= 'page_name = "'.$_POST['Page_Name'].'" ,';}
-                if($_POST['PageContent'] !== ''){$ForSQL .= 'page_content = "'.$_POST['PageContent'].'" ,';}
-                
-                $ForSQL = rtrim($ForSQL, ",");
-                $ForSQL .= " WHERE Type_page_id = ".$_POST['Cho_Page'];
-                echo $ForSQL;
-            }
-            echo $ForSQL;
+            $ForSQL = 'UPDATE type_page SET ';
+            if($_POST['Page_Name'] !== ''){$ForSQL .= 'page_name = "'.$_POST['Page_Name'].'" ,';}
+            if($_POST['PageContent'] !== ''){$ForSQL .= 'page_content = "'.$_POST['PageContent'].'" ,';}
+            $ForSQL .= ($_POST['Public'] == 'true')?'page_public = 1 ,':'page_public = 0 ,';
+            
+            $ForSQL = rtrim($ForSQL, ",");
+            $ForSQL .= " WHERE Type_page_id = ".$_POST['Cho_Page'];
 
             $sql=$pdo->prepare($ForSQL);$sql->execute();
 
@@ -27,7 +22,8 @@
             $ForSQL = $_SESSION['UserData']['Id'];
             $ForSQL .= ($_POST['Page_Name'] !== '')?',"'.$_POST['Page_Name'].'"':' , "預設名稱"';
             $ForSQL .= ($_POST['PageContent'] !== '')?',"'.$_POST['PageContent'].'"':' , "尚未寫入描述"';
-            $ForSQL = 'INSERT INTO type_page(user_id,page_name,page_content) VALUES('.$ForSQL.')';
+            $ForSQL .= ($_POST['Public'] == 'True')?',"1"':',"0"';
+            $ForSQL = 'INSERT INTO type_page(user_id,page_name,page_content,page_public) VALUES('.$ForSQL.')';
             $sql=$pdo->prepare($ForSQL);$sql->execute();
         }
 
@@ -74,6 +70,7 @@
 	foreach ($sql->fetchAll() as $row) {
         $PageListArr[$row['Type_page_id']]['Name']=$row['page_name'];
         $PageListArr[$row['Type_page_id']]['content']=$row['page_content'];
+        $PageListArr[$row['Type_page_id']]['public']=$row['page_public'];
     }
 
 
@@ -107,7 +104,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php echo PrintHead('登入哈勒筆記') ?>
+    <?php echo PrintHead('頁目列表 | 哈勒筆記') ?>
     <link rel="stylesheet" href="../css/choosePage.css">
     <script>var PageListArr = <?php echo $json_array?></script>
 </head>
@@ -131,7 +128,7 @@
                     <h3 class="PageName">新增頁面</h3>
                     <div>
                         <input id="Form_Public" type="checkbox" name="Public" value="true">
-                        <label for="Form_Public">公開(未實裝)</label>
+                        <label for="Form_Public">公開頁目</label>
                     </div>
                 </div>
                 <h3>名稱</h3>
@@ -198,8 +195,9 @@
 
         //
         document.getElementById('ButtomMark').addEventListener('click' , function(event){
-                document.querySelector('#FormTop .PageName').innerHTML = '新增頁目';
+            document.querySelector('#FormTop .PageName').innerHTML = '新增頁目';
             document.querySelector('.Edit_PageId').value = 'NewType';
+            document.getElementById('Form_Public').checked = false;
         })
 
 
@@ -217,6 +215,8 @@
                 //替換編輯窗
                 document.querySelector('#FormTop .PageName').innerHTML = '編輯：'+ PageListArr[PageId]['Name'];
                 document.querySelector('.Edit_PageId').value = PageId;
+                let publicBut = document.getElementById('Form_Public')
+                if(PageListArr[PageId]['public'] == 1){publicBut.checked = true;}else{publicBut.checked = false;}
             })
             
         })
