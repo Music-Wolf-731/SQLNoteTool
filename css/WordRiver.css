@@ -90,7 +90,7 @@ h3 {font-size:1.5em}
 #EditUse>div:first-child>div{
     margin: .2em .5em;user-select: none;
 }
-#EditUse>div:last-child{
+#ButtonBox{
     height:100%;
     width:4em;
     overflow: scroll;

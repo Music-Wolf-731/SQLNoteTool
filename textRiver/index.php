@@ -385,7 +385,7 @@ $json_array = json_encode($WordArr);
                 <div id="GroupEditBox" class="FlexBox hidden"><?php if($OwnerOpen){WriteGroupEdit($GroupList);}?></div>
                 <div id="ThrowOtherPage" class="FlexBox hidden"><?php if($OwnerOpen){PrintPageEdit($OnlyPage);} ?></div>
             </div>
-            <?php if($OwnerOpen){echo '<div><input type="reset"><input type="submit"></div>';} ?></div>
+            <?php if($OwnerOpen){echo '<div Id="ButtonBox"><input type="reset"><input type="submit"></div>';} ?></div>
             
         </form>
     </div>
