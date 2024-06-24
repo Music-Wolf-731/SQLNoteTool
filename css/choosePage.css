@@ -3,7 +3,6 @@ textarea{width:100%;}
 #PageList{
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
     flex-direction: row;
     padding:1em;
 }
@@ -70,11 +69,8 @@ input[type="checkbox"]:checked + label {
     font-size: 1.4em;margin: 0;
 }
 
-.Page_Pain {position: relative;}
-
 .Page_Pain a {
     background: var(--ThirdColor);
-    width:calc(50vw - 1.3em);
     padding: 1em;
     border-radius: 10px;
     color: white;
@@ -82,6 +78,11 @@ input[type="checkbox"]:checked + label {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+#PageList .title {
+    width: 100%;
+    overflow: hidden;
 }
 
 .PaneIcon {
@@ -99,8 +100,6 @@ input[type="checkbox"]:checked + label {
     border: 0px solid  var(--SpecialColor_A);
 }
 
-#PageList >  .Page_Pain:nth-child(n+3) a {
-    margin: 1em 0 0;}
 
 .Special_Check {
     background: var(--ThirdColor);
@@ -121,4 +120,31 @@ input[type="checkbox"]:checked + label {
 #CheckBox > .active{
     height:5em;
     padding: .5em;
+}
+
+@media screen and (max-width: 600px) {
+    .Page_Pain {
+        position: relative;
+        width:calc(50vw - 2em);
+        margin: 0 1.2em 0 0;
+    }
+    .Page_Pain:nth-child(2n){margin:0;}
+}
+
+@media screen and (min-width: 600px) and (max-width: 1180px) {
+    .Page_Pain {
+        position: relative;
+        width:calc(33vw - 1.4em);
+        margin: 0 1.2em 0 0;
+    }
+    .Page_Pain:nth-child(3n){margin:0;}
+}
+
+@media screen and (min-width: 1180px) {
+    .Page_Pain {
+        position: relative;
+        width:calc(24.5vw - 1em);
+        margin: 0 1.2em 0 0;
+    }
+    .Page_Pain:nth-child(4n){margin:0;}
 }
