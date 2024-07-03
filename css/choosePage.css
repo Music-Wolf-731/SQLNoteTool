@@ -1,10 +1,13 @@
 textarea{width:100%;}
 
+#PageListBox{
+    padding: 0 1em 4em;
+    display: flex;
+}
 #PageList{
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    padding:1em;
 }
 
 #PageList h3{

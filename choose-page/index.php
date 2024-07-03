@@ -110,11 +110,10 @@
 </head>
 <body>
     <?php PrintTopBar('ChoosePage','');?>
-    <div id='PageList'>
-    <?php
-    
-    WritePagePain($PageListArr);
-    ?>
+    <div id='PageListBox'>
+        <div id='PageList'>
+            <?php WritePagePain($PageListArr);?>
+        </div>
     </div>
 
     <div id="EditBox">

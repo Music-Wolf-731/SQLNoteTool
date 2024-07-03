@@ -96,6 +96,7 @@ input::placeholder,textarea::placeholder{color: rgba(255, 255, 255, 0.562);}
     display:flex;
     flex-direction: column;
     justify-content: center;
+    z-index: 100;
 }
 
 #TopBar > div:first-child {
