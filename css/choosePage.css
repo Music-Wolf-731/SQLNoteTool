@@ -65,7 +65,7 @@ input[type="checkbox"]:checked + label {
     top: -3em;
     flex-direction: column;
     align-items: center;
-    background: var(--ThirdColor);
+    background: var(--SecColor);
 }
 
 #ButtomMark p {
