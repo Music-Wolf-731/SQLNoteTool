@@ -126,7 +126,7 @@ input[type="checkbox"]:checked + label {
 @media screen and (max-width: 600px) {
     .Page_Pain {
         position: relative;
-        width:calc(50vw - 2em);
+        width:calc(49vw - 2em);
         margin: 0 1.2em 0 0;
     }
     .Page_Pain:nth-child(2n){margin:0;}
