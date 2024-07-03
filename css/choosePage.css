@@ -83,6 +83,7 @@ input[type="checkbox"]:checked + label {
 #PageList .title {
     width: 100%;
     overflow: hidden;
+    white-space: nowrap;
 }
 
 .PaneIcon {
@@ -134,7 +135,7 @@ input[type="checkbox"]:checked + label {
 @media screen and (min-width: 600px) and (max-width: 1180px) {
     .Page_Pain {
         position: relative;
-        width:calc(33vw - 1.4em);
+        width:calc(33vw - 2em);
         margin: 0 1.2em 0 0;
     }
     .Page_Pain:nth-child(3n){margin:0;}
@@ -143,7 +144,7 @@ input[type="checkbox"]:checked + label {
 @media screen and (min-width: 1180px) {
     .Page_Pain {
         position: relative;
-        width:calc(24.5vw - 1em);
+        width:calc(24vw - 1em);
         margin: 0 1.2em 0 0;
     }
     .Page_Pain:nth-child(4n){margin:0;}
