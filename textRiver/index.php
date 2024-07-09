@@ -248,7 +248,7 @@ function WriteGroupEdit($Arr){
         $var='<input type="checkbox" id="group_'.$key.'" name="group[]" value="'.$key.'"><label for="group_'.$key.'">'.$value.'</label>';
         $ForReturn=(isset($ForReturn))? $ForReturn.$var:$var;
     }
-    $ForReturn=(!isset($ForReturn))?'<h3>尚未建立群組，可點擊上方的編輯群組進行調整</h3>':$ForReturn;
+    $ForReturn=(!isset($ForReturn))?'<h3>尚未建立群組，可點擊上方的編輯群組進行調整</h3>':'<label onClick="AutoFirstGroup()">自動選擇首項</label>'.$ForReturn;
     echo $ForReturn;
 }
 
@@ -304,6 +304,8 @@ $json_array = json_encode($WordArr);
 
 
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -315,6 +317,17 @@ $json_array = json_encode($WordArr);
     // 在 JavaScript 中使用 JSON 字串
     var js_array = <?php echo $json_array; ?>;
     console.log(js_array);
+
+    function AutoFirstGroup(){
+        
+        if (window.location.href.indexOf("&FirstGroup=On") !== -1) {
+            // 如果存在，將其替換為空字符串
+            window.location.href = window.location.href.replace("&FirstGroup=On", "");
+            
+        } else {
+            window.location.href = window.location.href + '&FirstGroup=On';
+        }
+    }
     </script>
     <style>:root {--EditBoxHeight: var(--EditBox_S);}
     </style>
@@ -463,6 +476,12 @@ $json_array = json_encode($WordArr);
             })
             Check.checked = true
         }
+    }
+    //首個群組自動選擇
+    if (window.location.href.indexOf("&FirstGroup=On") !== -1){
+        document.querySelector('#GroupEditBox input').checked= true;
+        document.querySelector('#GroupEditBox label').classList.add("active");
+        document.getElementById('OnEditGroup').checked = true;
     }
 
     document.getElementById('GroupEditBox').querySelectorAll('label').forEach(checkbox => {
