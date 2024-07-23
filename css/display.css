@@ -1,19 +1,19 @@
-:root{
-    --EditBox_N:0px;
-    --EditBox_S:calc(10vh + 50px);
-    --EditBox_M:50vh;
-    --EditBox_L:calc(95vh - 50px);
-    --TopBarHeight:2.3em;
-    --BackGround:rgb(15, 10, 19);
-    --SecColor:rgb(41, 23, 58);
-    --ThirdColor:rgb(100, 38, 159);
-    --RiverTitleColor:rgb(194, 161, 226); 
+:root {
+    --EditBox_N: 0px;
+    --EditBox_S: calc(10vh + 50px);
+    --EditBox_M: 50vh;
+    --EditBox_L: calc(95vh - 50px);
+    --TopBarHeight: 2.3em;
+    --BackGround: rgb(15, 10, 19);
+    --SecColor: rgb(41, 23, 58);
+    --ThirdColor: rgb(100, 38, 159);
+    --RiverTitleColor: rgb(194, 161, 226);
 
-    --PainDeCho:rgb(147, 60, 173);
-    --PainCho:rgb(0 110 175);
-    
+    --PainDeCho: rgb(147, 60, 173);
+    --PainCho: rgb(0 110 175);
+
     --SpecialColor_A: rgb(205, 177, 23);
-    
+
     --TopBarHeight: 3em;
     --TopBarFontSize: 2em;
 
@@ -24,14 +24,16 @@
     background: var(--SecColor);
     border-radius: 20px;
 }
-#OnlyBox > div{
+
+#OnlyBox>div {
     display: flex;
     flex-direction: column;
     align-items: center;
 
     margin: 1.3em 1.7em 1.4em;
 }
-#OnlyBox > div a{
+
+#OnlyBox>div a {
     background: var(--ThirdColor);
 
     display: flex;
@@ -45,10 +47,12 @@
     padding: 0 .7em;
     text-decoration: none;
 }
-#OnlyBox > div > p{
+
+#OnlyBox>div>p {
     font-size: 2em;
 }
-#OnlyBox > div > a p{
+
+#OnlyBox>div>a p {
     font-size: 2em;
 }
 
@@ -56,14 +60,30 @@
 
 /* 通用樣式 */
 
-body{margin:0;background:var(--BackGround);color:white;font-size: 13px;}
+body {
+    margin: 0;
+    background: var(--BackGround);
+    color: white;
+    font-size: 13px;
+}
 
-input,select,textarea{background: var(--ThirdColor);color: white;}
-input::placeholder,textarea::placeholder{color: rgba(255, 255, 255, 0.562);}
+input,
+select,
+textarea {
+    background: var(--ThirdColor);
+    color: white;
+}
 
-.D_None {display: none;}
+input::placeholder,
+textarea::placeholder {
+    color: rgba(255, 255, 255, 0.562);
+}
 
-.hint{
+.D_None {
+    display: none;
+}
+
+.hint {
     width: calc(100% - 1em) !important;
     margin: .5em;
     padding: 1em;
@@ -75,8 +95,8 @@ input::placeholder,textarea::placeholder{color: rgba(255, 255, 255, 0.562);}
     background: rgba(255, 255, 255, 0.15);
     text-align: center;
 }
- 
-#logoutWindow > div{
+
+#logoutWindow>div {
     display: flex;
     background: var(--SecColor);
     padding: 3em;
@@ -85,7 +105,7 @@ input::placeholder,textarea::placeholder{color: rgba(255, 255, 255, 0.562);}
     justify-content: space-evenly;
 }
 
-#logoutWindow button{
+#logoutWindow button {
     background: var(--ThirdColor);
 }
 
@@ -93,58 +113,71 @@ input::placeholder,textarea::placeholder{color: rgba(255, 255, 255, 0.562);}
     width: 100%;
     background: var(--SecColor);
     position: fixed;
-    display:flex;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     z-index: 100;
 }
 
-#TopBar > div:first-child {
+#TopBar>div:first-child {
     height: var(--TopBarHeight);
     border: 0;
 }
 
-#TopBar a{color:white;text-decoration: none;}
-
-#TopBar p{
-    margin: .2em .7em ;font-size: 1.2em;
+#TopBar a {
+    color: white;
+    text-decoration: none;
 }
 
-#TopBarMainMenu{
-    display:flex;
+#TopBar p {
+    margin: .2em .7em;
+    font-size: 1.2em;
 }
 
-#TopBar>div:first-child{
-    width:100%;
-    display:flex;
+#TopBarMainMenu {
+    display: flex;
+}
+
+#TopBar>div:first-child {
+    width: 100%;
+    display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
 }
 
 
-#TopBarSpace{width:100%;height:var(--TopBarHeight)}
+#TopBarSpace {
+    width: 100%;
+    height: var(--TopBarHeight)
+}
 
 #GroupABox {
     background: var(--SecColor);
     border-top: 1px solid var(--RiverTitleColor);
 }
-#TopBar .FlexBox > a {
+
+#TopBar .FlexBox>a {
     background: var(--ThirdColor);
-    margin: .5em 0 .5em .8em ;
+    margin: .5em 0 .5em .8em;
     overflow: hidden;
     border-radius: 10px;
     padding: 3px;
 }
+
 #TopBar .FlexBox {
-    width:100%;
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
 }
 
-#TopBar .FlexBox p{margin: .2em .8em;}
+#TopBar .FlexBox p {
+    margin: .2em .8em;
+}
 
 
 @media screen and (max-width: 600px) {
-    body{font-size: calc(1vw + 6px);}
+    body {
+        font-size: calc(1vw + 6px);
+    }
 }
