@@ -1,0 +1,66 @@
+body {
+    background: linear-gradient(45deg, rgb(52, 8, 82), rgb(20, 1, 32));
+}
+
+#SitePageBackground,
+#SitePageBackgroundAnimal {
+    z-index: -1;
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    opacity: 1;
+    background-image: url('../aa.png');
+    background-size: contain;
+}
+
+#SitePageBackgroundAnimal {
+    animation: SiteBackground 2s step-end infinite;
+}
+
+@keyframes SiteBackground {
+    60% {
+        opacity: .7;
+    }
+
+    63% {
+        opacity: .2;
+        mix-blend-mode: screen;
+    }
+
+    65% {
+        opacity: .7;
+        mix-blend-mode: overlay;
+        background-position: -3px 5px;
+    }
+
+    67% {
+        opacity: .4;
+        mix-blend-mode: screen;
+
+    }
+
+    70% {
+        background-position: 0 0;
+    }
+
+    /* 起始位置 */
+    80% {
+        background-position: -3px 5px;
+
+        mix-blend-mode: overlay;
+    }
+
+    90% {
+        background-position: 6px -8px;
+    }
+
+    95% {
+        opacity: .6;
+    }
+
+    100% {
+        background-position: 10px 3px;
+    }
+
+    /* 结束位置 */
+}
